@@ -1,0 +1,13 @@
+{
+	"name": "hxArduino",
+	"license": "MIT",
+	"tags": [],
+	"description": "",
+	"contributors": ["haxeui", "ianharrigan"],
+	"releasenote": "",
+	"version": "1.0.0",
+	"classPath": "src",
+	"url": "https://github.com/ianharrigan/hxArduino",
+	"dependencies": {
+	}
+}
