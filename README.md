@@ -119,4 +119,5 @@ class TestClass2 {
     public function setViaRef(t1:TestClass1, value:Int) {
         t1.set(value);
     }
-}```
+}
+```
