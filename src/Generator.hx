@@ -3,6 +3,7 @@ package;
 import haxe.io.Path;
 import haxe.macro.Context;
 import haxe.macro.Expr.Binop;
+import haxe.macro.Expr.Unop;
 import haxe.macro.ExprTools;
 import haxe.macro.Type;
 import sys.FileSystem;
@@ -282,6 +283,9 @@ class Generator {
                     return printClassPath(c) + "::" + cf;
                 }
             case TField(e, FInstance(c, params, cf)):
+                if (c.toString() == "Array" && cf.toString() == "length") { // more array hack?
+                    return 'array_length(${printExpr(e)})';
+                }
                 return printExpr(e) + "." + cf;
             case TLocal(v):
                 return "" + printVar(v, null);
@@ -309,12 +313,29 @@ class Generator {
                 return '${printExpr(e1)} ${printBinop(op)} ${printExpr(e2)}';
             case TParenthesis(el):
                 return '(${printExpr(el)})';
+            case TArrayDecl(el):
+                return '{ ${printExprs(el, ", ")} }';
+            case TArray(e1, e2):
+                return '${printExpr(e1)}[${printExpr(e2)}]';
+            case TWhile(econd, e, normalWhile): 
+                return 'while (${printExpr(econd)}) ${printExpr(e)}';
+                trace(econd);
+            case TUnop(op, true, e1): return printExpr(e1) + printUnop(op);
+            case TUnop(op, false, e1): return printUnop(op) + printExpr(e1);
             default: 
                 trace("NOT IMPL: " + e.expr);
         }
         
         return "";
     }
+    
+	public static function printUnop(op:Unop) return switch(op) {
+		case OpIncrement: "++";
+		case OpDecrement: "--";
+		case OpNot: "!";
+		case OpNeg: "-";
+		case OpNegBits: "~";
+	}
     
 	public static function printBinop(op:Binop) return switch(op) {
 		case OpAdd: "+";
@@ -372,17 +393,24 @@ class Generator {
         var s:String = "";
         
         var isFn = false;
+        var isArray = false;
         if (e != null) { // hack??
             switch (v.t) {
                 case TFun(args, ret):
                     isFn = true;
+                case TInst(t, params):
+                    if (t.toString() == "Array") { // array hack??
+                        isArray = true;
+                    }
                 default:    
             }
         }
         
-        
         if (isFn == false) {
             s += v.name;
+        }
+        if (isArray == true) {
+            s += "[]";
         }
         if (e != null && e.expr != null) {
             s += " = ";
@@ -396,6 +424,9 @@ class Generator {
             case TAbstract(t, p):
                 return typeToCpp(t.toString());
             case TInst(t, params):
+                if (t.toString() == "Array") { // array hack???
+                    return printType(params[0], null);
+                }
                 return printClassPath(t);
             case TFun(args, ret):
                 return '${printType(ret, null)} (*${name})(${printArgs(args, ", ")})';

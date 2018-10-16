@@ -1,8 +1,6 @@
 #ifndef Dynamic_h_
 #define Dynamic_h_ 1
 
-//#include <string.h>
-
 #include <Arduino.h>
 
 class Dynamic {

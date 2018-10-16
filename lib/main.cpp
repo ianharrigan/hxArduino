@@ -18,6 +18,7 @@
 */
 
 #include <Arduino.h>
+#include "Helpers.h"
 #include "Main.h" 
 
 // Declared weak in Arduino.h to allow user redefinitions.
