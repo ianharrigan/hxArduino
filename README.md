@@ -1,5 +1,5 @@
 
-### NOTE: im in the process of rewriting the generated to make MUCH nicer output c++, basic GC (auto pointers), etc, etc - so far seems to be working nicely! Stay tuned!! 
+### NOTE: im in the process of rewriting the generator to make MUCH nicer output c++, basic GC (auto pointers), etc, etc - so far seems to be working nicely! Stay tuned!! 
 
 # hxArduino
 
