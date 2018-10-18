@@ -1,3 +1,6 @@
+
+### NOTE: im in the process of rewriting the generated to make MUCH nicer output c++, basic GC (auto pointers), etc, etc - so far seems to be working nicely! Stay tuned!! 
+
 # hxArduino
 
 * Includes basic Arduino externs (`Arduino`, `LiquidCrystal`, `MemoryFree`, custom haxe "bits" like haxe_Log::trace - see: `/lib`)
