@@ -15,6 +15,6 @@ class Main {
         Arduino.delay(1000);
     }
     
-	static function main() {
-	}
+    static function main() {
+    }
 }
