@@ -59,6 +59,10 @@ class ArduinoCPPBuilder {
     private static function buildClassHeader(c:OClass){
         _refs = [];
         _currentClass = c;
+        if (c.fullName == "Main") {  // TODO: does this make it brittle - dont really want Main to be extended from HxObject
+            c.stackOnly = true;
+        }
+        
         var sb = new StringBuf();
         var filename = Path.normalize(includePath + "/" + c.safeName + ".h");
         
