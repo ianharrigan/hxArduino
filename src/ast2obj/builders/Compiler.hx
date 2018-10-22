@@ -7,20 +7,34 @@ import sys.FileSystem;
 
 class Compiler {
     private static var ARDUINO_HOME:String = "C:\\PROGRA~2\\Arduino";
-    
+    private static var ARDUINO_HOME_OSX:String = "/Applications/Arduino.app";
+
     private static var GCC:String = '%ARDUINO_HOME%\\hardware\\tools\\avr/bin/avr-gcc';
     private static var GCCPP:String = '%ARDUINO_HOME%\\hardware\\tools\\avr/bin/avr-g++';
     private static var GCC_AR:String = '%ARDUINO_HOME%\\hardware\\tools\\avr/bin/avr-gcc-ar';
     private static var OBJCOPY:String = '%ARDUINO_HOME%\\hardware\\tools\\avr/bin/avr-objcopy';
     private static var SIZE:String = '%ARDUINO_HOME%\\hardware\\tools\\avr/bin/avr-size';
-    
+
+    private static var GCC_OSX:String = '%ARDUINO_HOME%/Contents/Java/hardware/tools/avr/bin/avr-gcc';
+    private static var GCCPP_OSX:String = '%ARDUINO_HOME%/Contents/Java/hardware/tools/avr/bin/avr-g++';
+    private static var GCC_AR_OSX:String = '%ARDUINO_HOME%/Contents/Java/hardware/tools/avr/bin/avr-gcc-ar';
+    private static var OBJCOPY_OSX:String = '%ARDUINO_HOME%/Contents/Java/hardware/tools/avr/bin/avr-objcopy';
+    private static var SIZE_OSX:String = '%ARDUINO_HOME%/Contents/Java/hardware/tools/avr/bin/avr-size';
+
     private static var STD_INCLUDES:Array<String> = [
         "%ARDUINO_HOME%\\hardware\\arduino\\avr\\cores\\arduino",
         "%ARDUINO_HOME%\\hardware\\arduino\\avr\\variants\\standard"
     ];
-    
+    private static var STD_INCLUDES_OSX:Array<String> = [
+        "%ARDUINO_HOME%/Contents/Java/hardware/arduino/avr/cores/arduino",
+        "%ARDUINO_HOME%/Contents/Java/hardware/arduino/avr/variants/standard"
+    ];
+
     private static var ASM_CORE:Array<String> = [
         "%ARDUINO_HOME%\\hardware\\arduino\\avr\\cores\\arduino\\wiring_pulse.S"
+    ];
+    private static var ASM_CORE_OSX:Array<String> = [
+        "%ARDUINO_HOME%/Contents/Java/hardware/arduino/avr/cores/arduino/wiring_pulse.S"
     ];
 
     private static var C_CORE:Array<String> = [
@@ -31,6 +45,15 @@ class Compiler {
         "%ARDUINO_HOME%\\hardware\\arduino\\avr\\cores\\arduino\\wiring_analog.c",
         "%ARDUINO_HOME%\\hardware\\arduino\\avr\\cores\\arduino\\wiring.c",
         "%ARDUINO_HOME%\\hardware\\arduino\\avr\\cores\\arduino\\hooks.c"
+    ];
+    private static var C_CORE_OSX:Array<String> = [
+        "%ARDUINO_HOME%/Contents/Java/hardware/arduino/avr/cores/arduino/wiring_shift.c",
+        "%ARDUINO_HOME%/Contents/Java/hardware/arduino/avr/cores/arduino/wiring_pulse.c",
+        "%ARDUINO_HOME%/Contents/Java/hardware/arduino/avr/cores/arduino/wiring_digital.c",
+        "%ARDUINO_HOME%/Contents/Java/hardware/arduino/avr/cores/arduino/WInterrupts.c",
+        "%ARDUINO_HOME%/Contents/Java/hardware/arduino/avr/cores/arduino/wiring_analog.c",
+        "%ARDUINO_HOME%/Contents/Java/hardware/arduino/avr/cores/arduino/wiring.c",
+        "%ARDUINO_HOME%/Contents/Java/hardware/arduino/avr/cores/arduino/hooks.c"
     ];
 
     private static var CPP_CORE:Array<String> = [
@@ -51,35 +74,70 @@ class Compiler {
         "%ARDUINO_HOME%\\hardware\\arduino\\avr\\cores\\arduino\\WMath.cpp",
         "%ARDUINO_HOME%\\hardware\\arduino\\avr\\cores\\arduino\\USBCore.cpp"
     ];
-    
+    private static var CPP_CORE_OSX:Array<String> = [
+        "%ARDUINO_HOME%/Contents/Java/hardware/arduino/avr/cores/arduino/CDC.cpp",
+        "%ARDUINO_HOME%/Contents/Java/hardware/arduino/avr/cores/arduino/new.cpp",
+        "%ARDUINO_HOME%/Contents/Java/hardware/arduino/avr/cores/arduino/Tone.cpp",
+        "%ARDUINO_HOME%/Contents/Java/hardware/arduino/avr/cores/arduino/PluggableUSB.cpp",
+        "%ARDUINO_HOME%/Contents/Java/hardware/arduino/avr/cores/arduino/HardwareSerial.cpp",
+        "%ARDUINO_HOME%/Contents/Java/hardware/arduino/avr/cores/arduino/IPAddress.cpp",
+        "%ARDUINO_HOME%/Contents/Java/hardware/arduino/avr/cores/arduino/Print.cpp",
+        "%ARDUINO_HOME%/Contents/Java/hardware/arduino/avr/cores/arduino/HardwareSerial2.cpp",
+        "%ARDUINO_HOME%/Contents/Java/hardware/arduino/avr/cores/arduino/abi.cpp",
+        "%ARDUINO_HOME%/Contents/Java/hardware/arduino/avr/cores/arduino/HardwareSerial1.cpp",
+        "%ARDUINO_HOME%/Contents/Java/hardware/arduino/avr/cores/arduino/Stream.cpp",
+        "%ARDUINO_HOME%/Contents/Java/hardware/arduino/avr/cores/arduino/HardwareSerial0.cpp",
+        "%ARDUINO_HOME%/Contents/Java/hardware/arduino/avr/cores/arduino/HardwareSerial3.cpp",
+        "%ARDUINO_HOME%/Contents/Java/hardware/arduino/avr/cores/arduino/WString.cpp",
+        "%ARDUINO_HOME%/Contents/Java/hardware/arduino/avr/cores/arduino/WMath.cpp",
+        "%ARDUINO_HOME%/Contents/Java/hardware/arduino/avr/cores/arduino/USBCore.cpp"
+    ];
+
     private static var CPP_FLAGS:String = "-c -w -Os -Wall -Wextra -std=gnu++11 -fpermissive -fno-exceptions -ffunction-sections -fdata-sections -fno-threadsafe-statics -Wno-error=narrowing -MMD -flto -mmcu=atmega328p -DF_CPU=16000000L -DARDUINO=10807 -DARDUINO_AVR_UNO -DARDUINO_ARCH_AVR";
     private static var ASM_FLAGS:String = "-c -x assembler-with-cpp -flto -MMD -mmcu=atmega328p -DF_CPU=16000000L -DARDUINO=10807 -DARDUINO_AVR_UNO -DARDUINO_ARCH_AVR";
     private static var C_FLAGS:String = "-c -Os -Wall -Wextra -std=gnu11 -ffunction-sections -fdata-sections -MMD -flto -fno-fat-lto-objects -mmcu=atmega328p -DF_CPU=16000000L -DARDUINO=10807 -DARDUINO_AVR_UNO -DARDUINO_ARCH_AVR";
     private static var LINK_FLAGS:String = "-Wall -Wextra -Os -flto -fuse-linker-plugin -Wl,--gc-sections -mmcu=atmega328p";
-    
+
     private static var NAME:String = "MyApp";
-    
+
     public static function compile(srcPath:String, includePath:String, outPath:String, libraries:Array<String> = null) {
-        haxe.Log.trace = function(v:Dynamic, ?infos:haxe.PosInfos) { 
+        haxe.Log.trace = function(v:Dynamic, ?infos:haxe.PosInfos) {
           Sys.println(v);
         }
-        
+
+        if (Sys.systemName() == "Mac"){
+            ARDUINO_HOME = ARDUINO_HOME_OSX;
+
+            GCC = GCC_OSX;
+            GCCPP = GCCPP_OSX;
+            GCC_AR = GCC_AR_OSX;
+            OBJCOPY = OBJCOPY_OSX;
+            SIZE = SIZE_OSX;
+
+            STD_INCLUDES = STD_INCLUDES_OSX;
+            ASM_CORE = ASM_CORE_OSX;
+            C_CORE = C_CORE_OSX;
+            CPP_CORE = CPP_CORE_OSX;
+        }
+
+
+
         if (libraries == null) {
             libraries = [];
         }
-        
+
         if (Sys.getEnv("ARDUINO_HOME") != null) {
             ARDUINO_HOME = Sys.getEnv("ARDUINO_HOME");
         }
-        
+
         STD_INCLUDES.push(includePath);
-        
+
         FileSystem.createDirectory(outPath);
         FileSystem.createDirectory(Path.normalize(outPath + "/core"));
         NAME = "MyApp"; // TODO: better way / name / does it matter?
-        
+
         expandVars();
-        
+
         /////////////////////////////////////////////////////////////////////////////
         // LIBRARIES
         /////////////////////////////////////////////////////////////////////////////
@@ -98,7 +156,7 @@ class Compiler {
                 FileHelper.copyFiles('${ARDUINO_HOME}/hardware/arduino/avr/libraries/${l}/src', includePath, "c");
             }
         }
-        
+
         /////////////////////////////////////////////////////////////////////////////
         // COMPILATION
         /////////////////////////////////////////////////////////////////////////////
@@ -108,15 +166,15 @@ class Compiler {
             trace("NOTHING TO COMPILE!");
             return;
         }
-        
+
         var compilationFailed:Bool = false;
         for (cppFile in cppFiles) {
             var params:Array<String> = CPP_FLAGS.split(" ");
-            
+
             for (include in STD_INCLUDES) {
                 params.push(Path.normalize('-I${include}'));
             }
-            
+
             params.push(Path.normalize('${cppFile}'));
             params.push('-o');
             params.push(Path.normalize('${outPath}/${fileName(cppFile)}.o'));
@@ -126,27 +184,27 @@ class Compiler {
                 break;
             }
         }
-        
+
         if (compilationFailed == true) {
             trace("COMPILATION FAILED!");
             return;
         }
-        
+
         /////////////////////////////////////////////////////////////////////////////
         // ASM CORE
         /////////////////////////////////////////////////////////////////////////////
         compilationFailed = false;
         for (asmFile in ASM_CORE) {
             var params:Array<String> = ASM_FLAGS.split(" ");
-            
+
             for (include in STD_INCLUDES) {
                 params.push(Path.normalize('-I${include}'));
             }
-            
+
             params.push(Path.normalize('${asmFile}'));
             params.push('-o');
             params.push(Path.normalize('${outPath}/core/${fileName(asmFile)}.o'));
-            
+
             var n = new ProcessHelper().run(Path.normalize(GCC), params);
             if (n != 0) {
                 compilationFailed = true;
@@ -158,61 +216,61 @@ class Compiler {
             trace("ASM CORE COMPILATION FAILED!");
             return;
         }
-        
+
         /////////////////////////////////////////////////////////////////////////////
         // C CORE
         /////////////////////////////////////////////////////////////////////////////
         compilationFailed = false;
         for (cFile in C_CORE) {
             var params:Array<String> = C_FLAGS.split(" ");
-            
+
             for (include in STD_INCLUDES) {
                 params.push(Path.normalize('-I${include}'));
             }
-            
+
             params.push(Path.normalize('${cFile}'));
             params.push('-o');
             params.push(Path.normalize('${outPath}/core/${fileName(cFile)}.o'));
-            
+
             var n = new ProcessHelper().run(Path.normalize(GCC), params);
             if (n != 0) {
                 compilationFailed = true;
                 break;
             }
         }
-        
+
         if (compilationFailed == true) {
             trace("C CORE COMPILATION FAILED!");
             return;
         }
-        
+
         /////////////////////////////////////////////////////////////////////////////
         // CPP CORE
         /////////////////////////////////////////////////////////////////////////////
         compilationFailed = false;
         for (cppFile in CPP_CORE) {
             var params:Array<String> = CPP_FLAGS.split(" ");
-            
+
             for (include in STD_INCLUDES) {
                 params.push(Path.normalize('-I${include}'));
             }
-            
+
             params.push(Path.normalize('${cppFile}'));
             params.push('-o');
             params.push(Path.normalize('${outPath}/core/${fileName(cppFile)}.o'));
-            
+
             var n = new ProcessHelper().run(Path.normalize(GCCPP), params);
             if (n != 0) {
                 compilationFailed = true;
                 break;
             }
         }
-        
+
         if (compilationFailed == true) {
             trace("CPP CORE COMPILATION FAILED!");
             return;
         }
-        
+
         /////////////////////////////////////////////////////////////////////////////
         // ARCHIVE
         /////////////////////////////////////////////////////////////////////////////
@@ -226,12 +284,12 @@ class Compiler {
                 break;
             }
         }
-        
+
         if (compilationFailed == true) {
             trace("ARCHIVE FAILED!");
             return;
         }
-        
+
         /////////////////////////////////////////////////////////////////////////////
         // LINK
         /////////////////////////////////////////////////////////////////////////////
@@ -247,7 +305,7 @@ class Compiler {
             trace("LINK FAILED!");
             return;
         }
-        
+
         /////////////////////////////////////////////////////////////////////////////
         // OBJCOPY 1
         /////////////////////////////////////////////////////////////////////////////
@@ -259,7 +317,7 @@ class Compiler {
             trace("OBJCOPY 1 FAILED!");
             return;
         }
-        
+
         /////////////////////////////////////////////////////////////////////////////
         // OBJCOPY 2
         /////////////////////////////////////////////////////////////////////////////
@@ -271,7 +329,7 @@ class Compiler {
             trace("OBJCOPY 2 FAILED!");
             return;
         }
-        
+
         /////////////////////////////////////////////////////////////////////////////
         // SIZE
         /////////////////////////////////////////////////////////////////////////////
@@ -280,31 +338,31 @@ class Compiler {
         var sizeHelper = new SizeHelper(Path.normalize(SIZE), params);
         sizeHelper.displayStats();
     }
-    
+
     private static function expandVars() {
         GCC = StringTools.replace(GCC, "%ARDUINO_HOME%", ARDUINO_HOME);
         GCCPP = StringTools.replace(GCCPP, "%ARDUINO_HOME%", ARDUINO_HOME);
         GCC_AR = StringTools.replace(GCC_AR, "%ARDUINO_HOME%", ARDUINO_HOME);
         OBJCOPY = StringTools.replace(OBJCOPY, "%ARDUINO_HOME%", ARDUINO_HOME);
         SIZE = StringTools.replace(SIZE, "%ARDUINO_HOME%", ARDUINO_HOME);
-        
+
         for (a in 0...STD_INCLUDES.length) {
             STD_INCLUDES[a] = StringTools.replace(STD_INCLUDES[a], "%ARDUINO_HOME%", ARDUINO_HOME);
         }
-        
+
         for (a in 0...ASM_CORE.length) {
             ASM_CORE[a] = StringTools.replace(ASM_CORE[a], "%ARDUINO_HOME%", ARDUINO_HOME);
         }
-        
+
         for (a in 0...C_CORE.length) {
             C_CORE[a] = StringTools.replace(C_CORE[a], "%ARDUINO_HOME%", ARDUINO_HOME);
         }
-        
+
         for (a in 0...CPP_CORE.length) {
             CPP_CORE[a] = StringTools.replace(CPP_CORE[a], "%ARDUINO_HOME%", ARDUINO_HOME);
         }
     }
-    
+
     private static function fileName(f:String):String {
         var p = new Path(f);
         return p.file + "." + p.ext;
