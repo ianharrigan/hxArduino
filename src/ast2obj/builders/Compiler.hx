@@ -84,8 +84,19 @@ class Compiler {
         // LIBRARIES
         /////////////////////////////////////////////////////////////////////////////
         for (l in libraries) {
-            FileHelper.copyFiles('${ARDUINO_HOME}/libraries/${l}/src', srcPath, "cpp");
-            FileHelper.copyFiles('${ARDUINO_HOME}/libraries/${l}/src', includePath, "h");
+            if (FileSystem.exists(Path.normalize('${ARDUINO_HOME}/libraries/${l}/src'))) {
+                FileHelper.copyFiles('${ARDUINO_HOME}/libraries/${l}/src', srcPath, "cpp");
+                FileHelper.copyFiles('${ARDUINO_HOME}/libraries/${l}/src', includePath, "h");
+                FileHelper.copyFiles('${ARDUINO_HOME}/libraries/${l}/src', includePath, "c");
+            } else if (FileSystem.exists(Path.normalize('${ARDUINO_HOME}/libraries/${l}'))) {
+                FileHelper.copyFiles('${ARDUINO_HOME}/libraries/${l}', srcPath, "cpp");
+                FileHelper.copyFiles('${ARDUINO_HOME}/libraries/${l}', includePath, "h");
+                FileHelper.copyFiles('${ARDUINO_HOME}/libraries/${l}', includePath, "c");
+            } else if (FileSystem.exists(Path.normalize('${ARDUINO_HOME}/hardware/arduino/avr/libraries/${l}/src'))) {
+                FileHelper.copyFiles('${ARDUINO_HOME}/hardware/arduino/avr/libraries/${l}/src', srcPath, "cpp");
+                FileHelper.copyFiles('${ARDUINO_HOME}/hardware/arduino/avr/libraries/${l}/src', includePath, "h");
+                FileHelper.copyFiles('${ARDUINO_HOME}/hardware/arduino/avr/libraries/${l}/src', includePath, "c");
+            }
         }
         
         /////////////////////////////////////////////////////////////////////////////

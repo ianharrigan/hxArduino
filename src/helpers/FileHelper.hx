@@ -33,6 +33,8 @@ class FileHelper {
         for (f in files) {
             var relPath = StringTools.replace(f, src, "");
             var dstPath = Path.normalize(dst + "/" + relPath);
+            var p = new Path(dstPath);
+            FileSystem.createDirectory(p.dir);
             File.copy(f, dstPath);
         }
     }

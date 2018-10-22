@@ -63,6 +63,10 @@ class Generator {
             oclass.superClass.fullName = c.get().superClass.t.toString();
         }
         oclass.isExtern = c.get().isExtern;
+        if (oclass.isExtern == true) {
+            oclass.externIncludes = extractMetaValues(c.get().meta, ":include");
+            oclass.externName = extractMetaValue(c.get().meta, ":native");
+        }
         oclass.stackOnly = hasMeta(c.get().meta, ":stackOnly");
         
         var classType:ClassType = c.get();
@@ -199,7 +203,7 @@ class Generator {
                 cast(oexpr, OFieldStatic).cls.fullName += c.toString();
                 cast(oexpr, OFieldStatic).cls.isExtern = c.get().isExtern;
                 if (cast(oexpr, OFieldStatic).cls.isExtern) {
-                    cast(oexpr, OFieldStatic).cls.externInclude = extractMetaValue(c.get().meta, ":include");
+                    cast(oexpr, OFieldStatic).cls.externIncludes = extractMetaValues(c.get().meta, ":include");
                     cast(oexpr, OFieldStatic).cls.externName = extractMetaValue(c.get().meta, ":native");
                 }
                 cast(oexpr, OFieldStatic).field = cf.get().name;
@@ -297,6 +301,22 @@ class Generator {
         }
         
         return metaValue;
+    }
+    
+    private static function extractMetaValues(meta:MetaAccess, name:String):Array<String> {
+        var metaValues = null;
+        
+        if (meta.extract(name) != null && meta.extract(name).length > 0) {
+            metaValues = [];
+            var metaEntries = meta.extract(name);
+            for (m in metaEntries) {
+                var metaValue:String = ExprTools.toString(m.params[0]);
+                metaValue = StringTools.replace(metaValue, "\"", "");
+                metaValues.push(metaValue);
+            }
+        }
+        
+        return metaValues;
     }
     
     private static function hasMeta(meta:MetaAccess, name:String):Bool {

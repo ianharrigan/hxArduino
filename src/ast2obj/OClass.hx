@@ -7,7 +7,7 @@ class OClass  {
     public var isExtern:Bool = false;
     public var stackOnly:Bool = false;
     public var externName:String = null;
-    public var externInclude:String = null;
+    public var externIncludes:Array<String> = null;
     
     public var methods:Array<OMethod> = [];
     public var classVars:Array<OClassVar> = [];

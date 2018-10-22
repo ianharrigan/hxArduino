@@ -31,6 +31,8 @@ class ArduinoCPPBuilder {
             if (c.isExtern == false) {
                 buildClassHeader(c);
                 buildClassImpl(c);
+            } else {
+                addLibraries(c.externIncludes);
             }
         }
         
@@ -87,13 +89,17 @@ class ArduinoCPPBuilder {
         for (cv in c.classVars) {
             sb.add("        ");
             var oclass = findClass(cv.type.name);
-            if (isInternalType(substTypeName(cv.type.safeName))) {
-                sb.add(substTypeName(cv.type.safeName));
+            var varTypeName:String = cv.type.safeName;
+            if (oclass.externName != null) {
+                varTypeName = oclass.externName;
+            }
+            if (isInternalType(substTypeName(varTypeName))) {
+                sb.add(substTypeName(varTypeName));
             } else if (oclass.stackOnly == true) {
-                sb.add(substTypeName(cv.type.safeName));
+                sb.add(substTypeName(varTypeName));
             } else {
                 sb.add("AutoPtr<");
-                sb.add(substTypeName(cv.type.safeName));
+                sb.add(substTypeName(varTypeName));
                 sb.add(">");
                 addRef("AutoPtr");
             }
@@ -388,8 +394,8 @@ class ArduinoCPPBuilder {
                     sb.add(".");
                 }
                 sb.add(fieldName);
-                if (ofield.cls.externInclude != null) {
-                    addRef(ofield.cls.externInclude);
+                if (ofield.cls.externIncludes != null) {
+                    addRefs(ofield.cls.externIncludes);
                 }
             } else {
                 sb.add(substName);
@@ -403,8 +409,12 @@ class ArduinoCPPBuilder {
                 if (oclass.stackOnly == false) {
                     sb.add("new ");
                 }
-                addLibrary(substTypeName(onew.cls.safeName));
-                sb.add(substTypeName(onew.cls.safeName));
+                var varTypeName = onew.cls.safeName;
+                if (oclass.externName != null) {
+                    varTypeName = oclass.externName;
+                }
+                addLibrary(substTypeName(varTypeName));
+                sb.add(substTypeName(varTypeName));
             }
             sb.add("(");
             for (i in 0...onew.expressions.length) {
@@ -498,6 +508,14 @@ class ArduinoCPPBuilder {
         }
         return className + "::" + fieldName;
     }
+
+    private static function addRefs(typeNames:Array<String>) {
+        if (typeNames != null) {
+            for (t in typeNames) {
+                addRef(t);
+            }
+        }
+    }
     
     private static function addRef(typeName:String) {
         if (typeName == "int" || typeName == "void") {
@@ -517,7 +535,21 @@ class ArduinoCPPBuilder {
         }
     }
     
+    private static function addLibraries(typeNames:Array<String>) {
+        if (typeNames != null) {
+            for (t in typeNames) {
+                addLibrary(t);
+            }
+        }
+    }
+    
     private static function addLibrary(typeName:String) {
+        if (typeName == null) {
+            return;
+        }
+        
+        typeName = StringTools.replace(typeName, ".h", "");
+        
         if (libraries.indexOf(typeName) == -1) {
             libraries.push(typeName);
         }
