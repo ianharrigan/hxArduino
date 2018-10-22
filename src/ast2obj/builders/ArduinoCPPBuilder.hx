@@ -96,7 +96,7 @@ class ArduinoCPPBuilder {
             sb.add("        ");
             var oclass = findClass(cv.type.name);
             var varTypeName:String = cv.type.safeName;
-            if (oclass.externName != null) {
+            if (oclass != null && oclass.externName != null) {
                 varTypeName = oclass.externName;
             }
             if (isInternalType(substTypeName(varTypeName))) {
@@ -290,7 +290,7 @@ class ArduinoCPPBuilder {
             } else {
                 var oclass = findClass(ovar.type.name);
                 var varTypeName = ovar.type.safeName;
-                if (oclass.isExtern == true && oclass.externName != null) {
+                if (oclass != null && oclass.isExtern == true && oclass.externName != null) {
                     varTypeName = oclass.externName;
                 }
                 if (oclass.stackOnly == true) {
@@ -384,7 +384,7 @@ class ArduinoCPPBuilder {
             sb.add(expressionString);
             var oclass = findClass(ofield.cls.fullName);
             var className = ofield.cls.safeName;
-            if (oclass.externName != null) {
+            if (oclass != null && oclass.externName != null) {
                 className = oclass.externName;
             }
             if (expressionString == "this") {
@@ -418,7 +418,7 @@ class ArduinoCPPBuilder {
             var onew = cast(e, ONew);
             var varTypeName = onew.cls.safeName;
             var oclass = findClass(onew.cls.fullName);
-            if (oclass.externName != null) {
+            if (oclass != null && oclass.externName != null) {
                 varTypeName = oclass.externName;
             }
             
@@ -470,9 +470,9 @@ class ArduinoCPPBuilder {
             case "Int":
                 sb.add(c.value);
             case "String":
-                //sb.add("\"" + c.value + "\"");
+                sb.add("\"" + c.value + "\"");
                 // TODO: always a good idea to "F" (flash mem) ? Not sure...
-                sb.add("F(\"" + c.value + "\")");
+                //sb.add("F(\"" + c.value + "\")");
             case "this":
                 sb.add("this");
             case "null":
@@ -506,6 +506,8 @@ class ArduinoCPPBuilder {
             } else {
                 addRef(oclass.safeName);
             }
+        } else {
+            addRef(typeName);
         }
         
         return typeName;

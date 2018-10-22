@@ -1,17 +1,12 @@
 package ast2obj;
+
 import ast2obj.builders.ArduinoCPPBuilder;
 import ast2obj.builders.Compiler;
-import ast2obj.builders.Installer;
-import ast2obj.builders.Monitor;
 import haxe.macro.Expr.Binop;
 import haxe.macro.Expr.Unop;
 import haxe.macro.ExprTools;
-import haxe.macro.TypeTools;
-
-#if macro
 import haxe.macro.Context;
 import haxe.macro.Type;
-#end
 
 class Generator {
     #if macro
