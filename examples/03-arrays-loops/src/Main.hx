@@ -9,6 +9,7 @@ class Main {
         var arr = [Arduino.HIGH, Arduino.LOW, Arduino.HIGH, Arduino.LOW, Arduino.HIGH, Arduino.LOW, Arduino.HIGH];
         for (a in arr) {
             Arduino.digitalWrite(Arduino.LED_BUILTIN, a);
+            Arduino.delay(1000);
         }
     }
     
