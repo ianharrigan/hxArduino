@@ -47,7 +47,12 @@ class ArduinoCPPBuilder {
         var oclass = null;
         
         for (c in classes) {
-            if (c.fullName == name) {
+            if (c.fullName == name || c.safeName.toLowerCase() == name.toLowerCase()) {
+                oclass = c;
+                break;
+            }
+            
+            if (c.isExtern && c.externName == name) {
                 oclass = c;
                 break;
             }
@@ -284,11 +289,15 @@ class ArduinoCPPBuilder {
                 sb.add(substTypeName(ovar.type.safeName));
             } else {
                 var oclass = findClass(ovar.type.name);
+                var varTypeName = ovar.type.safeName;
+                if (oclass.isExtern == true && oclass.externName != null) {
+                    varTypeName = oclass.externName;
+                }
                 if (oclass.stackOnly == true) {
-                    sb.add(substTypeName(ovar.type.safeName));
+                    sb.add(substTypeName(varTypeName));
                 } else {
                     sb.add("AutoPtr<");
-                    sb.add(substTypeName(ovar.type.safeName));
+                    sb.add(substTypeName(varTypeName));
                     sb.add(">");
                     addRef("AutoPtr");
                 }
@@ -374,9 +383,13 @@ class ArduinoCPPBuilder {
             var expressionString = buildExpression(ofield.nextExpression, tabs);
             sb.add(expressionString);
             var oclass = findClass(ofield.cls.fullName);
+            var className = ofield.cls.safeName;
+            if (oclass.externName != null) {
+                className = oclass.externName;
+            }
             if (expressionString == "this") {
                 sb.add("->");
-            } else if (isInternalType(substTypeName(ofield.cls.safeName))) {
+            } else if (isInternalType(substTypeName(className))) {
                 sb.add(".");
             } else if (oclass.stackOnly) {
                 sb.add(".");
@@ -484,7 +497,16 @@ class ArduinoCPPBuilder {
             case _:
         }
         
-        addRef(typeName);
+        //addRef(typeName);
+        var oclass = findClass(typeName);
+        if (oclass != null) {
+            if (oclass.isExtern == true) {
+                //addRef(oclass.externName);
+                addRefs(oclass.externIncludes);
+            } else {
+                addRef(oclass.safeName);
+            }
+        }
         
         return typeName;
     }
@@ -528,13 +550,11 @@ class ArduinoCPPBuilder {
             return;
         }
         
-        
         if (_currentClass == null || _currentClass.safeName == typeName || _currentClass.fullName == typeName ) {
             return;
         }
 
         typeName = StringTools.replace(typeName, ".h", "");
-        
         if (_refs.indexOf(typeName) == -1) {
             _refs.push(typeName);
         }
