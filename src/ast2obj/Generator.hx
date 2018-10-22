@@ -150,14 +150,22 @@ class Generator {
                 // Then the type and the expr dont match (one is string, one is int), so we'll make the 
                 // awful assumption its supposed to be an int constant... will likely go completely wrong
                 // somewhere
-                switch(e.t) {
-                    case TAbstract(t, params):
-                        if (cast(oexpr, OConstant).type != t.toString()) {
-                            var constantName:String = cast(oexpr, OConstant).value;
-                            oexpr = new OConstantIdentifier();
-                            cast(oexpr, OConstantIdentifier).name = constantName;
-                        }
-                    case _:    
+                if (cast(oexpr, OConstant).type != "this") {
+                    switch(e.t) {
+                        case TAbstract(t, params):
+                            if (cast(oexpr, OConstant).type != t.toString()) {
+                                var constantName:String = cast(oexpr, OConstant).value;
+                                oexpr = new OConstantIdentifier();
+                                cast(oexpr, OConstantIdentifier).name = constantName;
+                            }
+                        case TInst(t, params):
+                            if (cast(oexpr, OConstant).type != t.toString()) {
+                                var constantName:String = cast(oexpr, OConstant).value;
+                                oexpr = new OConstantIdentifier();
+                                cast(oexpr, OConstantIdentifier).name = constantName;
+                            }
+                        case _:    
+                    }
                 }
                 
             case TVar(v, e):
@@ -352,10 +360,13 @@ class Generator {
 		case OpMod: "%";
 		case OpInterval: "...";
 		case OpArrow: "=>";
-        case OpIn: " in ";
+        //case OpIn: " in ";
 		case OpAssignOp(op):
 			buildBinOp(op)
 			+ "=";
+        case _:
+            trace("buildBinOp not impl: " + op);
+            return "";
     }
     
 	private static function buildUnOp(op:Unop) return switch(op) {

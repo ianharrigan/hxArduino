@@ -3,6 +3,15 @@ package;
 @:include("Arduino.h")
 extern class Arduino {
     public static inline var LED_BUILTIN:Int = untyped 'LED_BUILTIN';
+    
+    public static  inline var A0:Int = untyped 'A0';
+    public static  inline var A1:Int = untyped 'A1';
+    public static  inline var A2:Int = untyped 'A2';
+    public static  inline var A3:Int = untyped 'A3';
+    public static  inline var A4:Int = untyped 'A4';
+    public static  inline var A5:Int = untyped 'A5';
+    public static  inline var A6:Int = untyped 'A6';
+    public static  inline var A7:Int = untyped 'A7';
 
     public static inline var INPUT:Int = untyped 'INPUT';
     public static inline var OUTPUT:Int = untyped 'OUTPUT';

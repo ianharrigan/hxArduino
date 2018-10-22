@@ -33,6 +33,7 @@ class ArduinoCPPBuilder {
                 buildClassImpl(c);
             } else {
                 addLibraries(c.externIncludes);
+                addRefs(c.externIncludes);
             }
         }
         
@@ -402,16 +403,17 @@ class ArduinoCPPBuilder {
             }
         } else if (Std.is(e, ONew)) {
             var onew = cast(e, ONew);
-            if (isInternalType(substTypeName(onew.cls.safeName))) {
+            var varTypeName = onew.cls.safeName;
+            var oclass = findClass(onew.cls.fullName);
+            if (oclass.externName != null) {
+                varTypeName = oclass.externName;
+            }
+            
+            if (isInternalType(substTypeName(varTypeName))) {
                 sb.add(substTypeName(onew.cls.safeName));
             } else {
-                var oclass = findClass(onew.cls.fullName);
                 if (oclass.stackOnly == false) {
                     sb.add("new ");
-                }
-                var varTypeName = onew.cls.safeName;
-                if (oclass.externName != null) {
-                    varTypeName = oclass.externName;
                 }
                 addLibrary(substTypeName(varTypeName));
                 sb.add(substTypeName(varTypeName));
@@ -526,9 +528,12 @@ class ArduinoCPPBuilder {
             return;
         }
         
-        if (_currentClass.safeName == typeName || _currentClass.fullName == typeName ) {
+        
+        if (_currentClass == null || _currentClass.safeName == typeName || _currentClass.fullName == typeName ) {
             return;
         }
+
+        typeName = StringTools.replace(typeName, ".h", "");
         
         if (_refs.indexOf(typeName) == -1) {
             _refs.push(typeName);

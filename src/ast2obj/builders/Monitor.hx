@@ -6,6 +6,8 @@ class Monitor {
           Sys.println(v);
         }
         
+        #if hxSerial
+        
         if (Sys.getEnv("ARDUINO_PORT") != null && port == null) {
             port = Sys.getEnv("ARDUINO_PORT");
         }
@@ -14,13 +16,8 @@ class Monitor {
         }
         
         trace("Starting serial monitor on " + port);
-        #if !neko
-        
-        trace("Cant monitor - not neko");
-        
-        #else
-        
         trace("Port list: " + hxSerial.Serial.getDeviceList());
+        
         var serialObj = new hxSerial.Serial(port, 115200);
         serialObj.setup();
         
@@ -34,6 +31,9 @@ class Monitor {
         trace("Closing");
         serialObj.close();
         
+        #else
+        
+        trace("No hxSerial");
         
         #end
     }
