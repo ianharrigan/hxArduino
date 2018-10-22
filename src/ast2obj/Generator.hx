@@ -292,7 +292,7 @@ class Generator {
             metaValue = StringTools.replace(metaValue, "\"", "");
         }
         
-        if (name == ":include") {
+        if (name == ":include" && metaValue != null) {
             metaValue = StringTools.replace(metaValue, ".h", "");
         }
         
