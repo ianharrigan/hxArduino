@@ -72,7 +72,7 @@ class ArduinoCPPBuilder {
         if (c.superClass != null) {
             sb.add(" : public ");
             sb.add(substTypeName(c.superClass.safeName));
-        } else {
+        } else if (c.stackOnly == false) {
             sb.add(" : public HxObject");
             addRef("HxObject");
         }
