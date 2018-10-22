@@ -1,6 +1,7 @@
 package;
 
 @:include("LiquidCrystal.h")
+@:stackOnly
 extern class LiquidCrystal {
     public function new(rs:Int, enable:Int, d0:Int, d1:Int, d2:Int, d3:Int) {
     }

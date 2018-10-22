@@ -1,2 +1,2 @@
---macro Generator.generate()
+--macro ast2obj.Generator.generate()
 --no-output
