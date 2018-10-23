@@ -5,6 +5,7 @@ import helpers.SizeHelper;
 
 class Installer {
     private static var ARDUINO_HOME:String = "C:\\PROGRA~2\\Arduino";
+    private static var ARDUINO_HOME_OSX:String = "/Applications/Arduino.app/Contents/Java";
 
     private static var DUDE:String = '%ARDUINO_HOME%\\hardware\\tools\\avr/bin/avrdude';
     private static var SIZE:String = '%ARDUINO_HOME%\\hardware\\tools\\avr/bin/avr-size';
@@ -30,6 +31,8 @@ class Installer {
         
         if (Sys.getEnv("ARDUINO_HOME") != null) {
             ARDUINO_HOME = Sys.getEnv("ARDUINO_HOME");
+        } else if (Sys.systemName() == "Mac") {
+            ARDUINO_HOME = ARDUINO_HOME_OSX;
         }
         
         trace("Installing: " + hexFile + " via " + port);
