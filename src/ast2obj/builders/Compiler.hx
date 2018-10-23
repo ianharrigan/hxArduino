@@ -7,6 +7,7 @@ import sys.FileSystem;
 
 class Compiler {
     private static var ARDUINO_HOME:String = "C:\\PROGRA~2\\Arduino";
+    private static var ARDUINO_HOME_OSX:String = "/Applications/Arduino.app/Contents/Java";
     
     private static var GCC:String = '%ARDUINO_HOME%\\hardware\\tools\\avr/bin/avr-gcc';
     private static var GCCPP:String = '%ARDUINO_HOME%\\hardware\\tools\\avr/bin/avr-g++';
@@ -70,6 +71,8 @@ class Compiler {
         
         if (Sys.getEnv("ARDUINO_HOME") != null) {
             ARDUINO_HOME = Sys.getEnv("ARDUINO_HOME");
+        } else if (Sys.systemName() == "Mac") {
+            ARDUINO_HOME = ARDUINO_HOME_OSX;
         }
         
         STD_INCLUDES.push(includePath);
