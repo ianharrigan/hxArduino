@@ -47,7 +47,12 @@ class ArduinoCPPBuilder {
         var oclass = null;
         
         for (c in classes) {
-            if (c.fullName == name) {
+            if (c.fullName == name || c.safeName.toLowerCase() == name.toLowerCase()) {
+                oclass = c;
+                break;
+            }
+            
+            if (c.isExtern && c.externName == name) {
                 oclass = c;
                 break;
             }
@@ -91,7 +96,7 @@ class ArduinoCPPBuilder {
             sb.add("        ");
             var oclass = findClass(cv.type.name);
             var varTypeName:String = cv.type.safeName;
-            if (oclass.externName != null) {
+            if (oclass != null && oclass.externName != null) {
                 varTypeName = oclass.externName;
             }
             if (isInternalType(substTypeName(varTypeName))) {
@@ -284,11 +289,15 @@ class ArduinoCPPBuilder {
                 sb.add(substTypeName(ovar.type.safeName));
             } else {
                 var oclass = findClass(ovar.type.name);
+                var varTypeName = ovar.type.safeName;
+                if (oclass != null && oclass.isExtern == true && oclass.externName != null) {
+                    varTypeName = oclass.externName;
+                }
                 if (oclass.stackOnly == true) {
-                    sb.add(substTypeName(ovar.type.safeName));
+                    sb.add(substTypeName(varTypeName));
                 } else {
                     sb.add("AutoPtr<");
-                    sb.add(substTypeName(ovar.type.safeName));
+                    sb.add(substTypeName(varTypeName));
                     sb.add(">");
                     addRef("AutoPtr");
                 }
@@ -374,9 +383,13 @@ class ArduinoCPPBuilder {
             var expressionString = buildExpression(ofield.nextExpression, tabs);
             sb.add(expressionString);
             var oclass = findClass(ofield.cls.fullName);
+            var className = ofield.cls.safeName;
+            if (oclass != null && oclass.externName != null) {
+                className = oclass.externName;
+            }
             if (expressionString == "this") {
                 sb.add("->");
-            } else if (isInternalType(substTypeName(ofield.cls.safeName))) {
+            } else if (isInternalType(substTypeName(className))) {
                 sb.add(".");
             } else if (oclass.stackOnly) {
                 sb.add(".");
@@ -405,7 +418,7 @@ class ArduinoCPPBuilder {
             var onew = cast(e, ONew);
             var varTypeName = onew.cls.safeName;
             var oclass = findClass(onew.cls.fullName);
-            if (oclass.externName != null) {
+            if (oclass != null && oclass.externName != null) {
                 varTypeName = oclass.externName;
             }
             
@@ -457,9 +470,9 @@ class ArduinoCPPBuilder {
             case "Int":
                 sb.add(c.value);
             case "String":
-                //sb.add("\"" + c.value + "\"");
+                sb.add("String(\"" + c.value + "\")");
                 // TODO: always a good idea to "F" (flash mem) ? Not sure...
-                sb.add("F(\"" + c.value + "\")");
+                //sb.add("F(\"" + c.value + "\")");
             case "this":
                 sb.add("this");
             case "null":
@@ -484,7 +497,18 @@ class ArduinoCPPBuilder {
             case _:
         }
         
-        addRef(typeName);
+        //addRef(typeName);
+        var oclass = findClass(typeName);
+        if (oclass != null) {
+            if (oclass.isExtern == true) {
+                //addRef(oclass.externName);
+                addRefs(oclass.externIncludes);
+            } else {
+                addRef(oclass.safeName);
+            }
+        } else {
+            addRef(typeName);
+        }
         
         return typeName;
     }
@@ -528,13 +552,11 @@ class ArduinoCPPBuilder {
             return;
         }
         
-        
         if (_currentClass == null || _currentClass.safeName == typeName || _currentClass.fullName == typeName ) {
             return;
         }
 
         typeName = StringTools.replace(typeName, ".h", "");
-        
         if (_refs.indexOf(typeName) == -1) {
             _refs.push(typeName);
         }

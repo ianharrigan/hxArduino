@@ -24,4 +24,5 @@ extern class Arduino {
     public static function digitalRead(pin:Int):Int;
     public static function analogRead(pin:Int):Int;
     public static function delay(amount:Int):Void;
+    public static function map(value:Int, fromLow:Int, fromHigh:Int, toLow:Int, toHigh:Int):Int;
 }
