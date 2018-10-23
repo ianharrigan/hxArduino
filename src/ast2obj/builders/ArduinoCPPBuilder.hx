@@ -470,7 +470,7 @@ class ArduinoCPPBuilder {
             case "Int":
                 sb.add(c.value);
             case "String":
-                sb.add("\"" + c.value + "\"");
+                sb.add("String(\"" + c.value + "\")");
                 // TODO: always a good idea to "F" (flash mem) ? Not sure...
                 //sb.add("F(\"" + c.value + "\")");
             case "this":
