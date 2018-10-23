@@ -25,7 +25,7 @@ class Run {
             Sys.getChar(false);
         } else if (command == "monitor") {
             runCommand("monitor", args);
-        } else if (command == "run") {
+        } else if (command == "test") {
             runCommand("install", args);
             runCommand("monitor", args);
         } else {
