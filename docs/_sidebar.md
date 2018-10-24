@@ -9,9 +9,11 @@
    * [Hello world](haxe/hello-world.md)
    * [Learn Haxe](haxe/learn-haxe.md)
 
-* Getting started
+* [Getting started](start/getting_started.md)
 	* [Windows](start/windows.md)
 	* [OSX](start/osx.md)
-	* Linux (needs love)
+	* [Linux (needs love)](start/linux.md)
+	* [build](start/build.md)
 
-
+* Notes
+    * [Baud](notes/baud.md)

@@ -1,18 +1,8 @@
-## hxArduino on OSX
+# hxArduino on OSX
 
-I am going to state the obvious here:
+Make sure you followed the [Getting Started](start/getting_started.md) instructions first.
 
-- [Install Haxe](https://haxe.org/download/file/3.4.7/haxe-3.4.7-osx-installer.pkg/)
-- [Install VS Code for Mac](https://code.visualstudio.com/docs/?dv=osx)
-- [Install the Arduino IDE](https://www.arduino.cc/en/Main/Software)
 
-But I am guessing that you have that already, so lets move on
-
-* Install "hxSerial"
-    * `haxelib install hxSerial`
-    * or `haxelib install build.hxml`
-* Download hxArduino to folder
-* `haxelib dev hxArduino path/to/folder`
 * `haxe -lib hxArduino -cp src -neko dummy.n -main Main`
 	* (Need to use neko dummy output for now - not entirely sure why)
 * `haxelib run hxArduino test C:\Temp\temp2\bin\generated`
@@ -39,61 +29,7 @@ haxelib run hxArduino test -port COM3
 
 ## todo
 
-```
-→ haxelib run hxArduino help
-hxArduino
-usage: haxelib run hxArduino [install/monitor/test] [-h] [-v] [-file FOO] [-port BAR]
 
-Optional arguments:
-  -install            Install Arduino code on device.
-  -monitor            Monitor com ports.
-  -test               Install and monitor.
-  -help               This message .
-  -h, --help          Show this help message and exit.
-  -v, --version       Show program's version number and exit.
-  -file               hexfile?.
-  -port               port to use.
-```
-
-
-
-anche:  [git:master]
-
-→ haxelib run hxArduino help
-hxArduino
-usage: haxelib run hxArduino [install/monitor/test] [-h] [-v] [-file FOO] [-port BAR]
-
-Optional arguments:
-  install            Install Arduino code on device.
-  monitor            Monitor com ports.
-  test               Install and monitor.
-  help               This message .
-  -h, --help         Show this help message and exit.
-  -v, --version      Show program's version number and exit.
-  -file              hexfile?.
-  -port              port to use.
-
-path:     ~/Documents/GIT/hxArduino/examples/01-blink
-dir:      [01-blink]
-branche:  [git:master]
-
-→ haxelib run hxArduino help
-hxArduino
-usage: haxelib run hxArduino [install/monitor/test] [-h] [-v] [-file FOO] [-port BAR]
-
-Optional arguments:
-  install            Install Arduino code on device.
-  monitor            Monitor com ports.
-  test               Install and monitor.
-  help               This message .
-  -h, --help         Show this help message and exit.
-  -v, --version      Show program's version number and exit.
-  -file              hexfile?.
-  -port              port to use.
-
-path:     ~/Documents/GIT/hxArduino/examples/01-blink
-dir:      [01-blink]
-branche:  [git:master]
 
 → haxelib run hxArduino help
 hxArduino
