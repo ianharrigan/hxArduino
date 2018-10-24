@@ -23,6 +23,7 @@
     * [Blink](example/blink.md)
 
 * Notes
+    * [Docsify](notes/docsify.md)
     * [Ports](notes/ports.md)
     * [Baud](notes/baud.md)
     * [Main](notes/main.md)
