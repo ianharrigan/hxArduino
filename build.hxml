@@ -1,5 +1,5 @@
 -cp src
 -main Run
 -lib hxSerial
--cpp cpp
+-neko run.n
 --no-output
