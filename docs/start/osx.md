@@ -2,126 +2,111 @@
 
 Make sure you followed the [Getting Started](start/getting_started.md) instructions first.
 
+## Environment variable
 
-* `haxe -lib hxArduino -cp src -neko dummy.n -main Main`
-	* (Need to use neko dummy output for now - not entirely sure why)
-* `haxelib run hxArduino test C:\Temp\temp2\bin\generated`
-	* Makes COM port assumption (needs to change!)
+Normally if you follow the install instructions, you will install Arduino into `~/Applications` folder
+
+If you did that, this app will run smooth!
 
 
 
-##
+Otherwise you need to set some environment variable
 
-in 01-blink folder:
-
+```bash
+ARDUINO_HOME=/NotApplications/Arduino.app/Contents/Java
 ```
-haxe build.hxml
+(default: `/Applications/Arduino.app/Contents/Java`)
+
+You can also set the port of the serial device
+
+```bash
+ARDUINO_PORT=/dev/cu.usbmodem14101
 ```
+(default: `COM3` which will never work!)
 
-and to test:
-
-
-```
-haxelib run hxArduino test -port COM3
-```
-(with whatever your com port is)
+Forgot how to? Check [How to set environment variable](start/osx.md?id=how-to-set-environment-variable)
 
 
-## todo
+## Find Arduino Port
 
+Find Port Number on Macintosh
+Open terminal and type: `ls /dev/*`.
 
+Note the port number listed for `/dev/tty.usbmodem*` or `/dev/tty.usbserial*`. The port number is represented with `*` here.
 
-→ haxelib run hxArduino help
-hxArduino
-usage: haxelib run hxArduino [install/monitor/test] [-h] [-v] [-file FOO] [-port BAR]
+For example: `/dev/ttyUSB0`.
 
-Optional arguments:
-  -install            Install Arduino code on device.
-  -monitor            Monitor com ports.
-  -test               Install and monitor.
-  -help               This message .
-  -h, --help          Show this help message and exit.
-  -v, --version       Show program's version number and exit.
-  -file               hexfile?.
-  -port               port to use.
+Or use build in tool:
 
+`haxelib run hxArduino --portlist`
 
+Possible answer **without** an Arduino connected to your computer:
 
-
-## ports
-
-Select the serial device of the Arduino board from the Tools | Serial Port menu. On Windows, this should be COM1 or COM2 for a serial Arduino board, or COM3, COM4, or COM5 for a USB board. On the Mac, this should be something like /dev/cu.usbserial-1B1 for a USB board, or something like /dev/cu.USA19QW1b1P1.1 if using a Keyspan adapter with a serial board (other USB-to-serial adapters use different names).
-
-
-
-→ haxelib run hxArduino -monitor
-Starting serial monitor on COM3
-Port list: [/dev/cu.Bluetooth-Incoming-Port,/dev/tty.Bluetooth-Incoming-Port,/dev/cu.usbmodem14101,/dev/tty.usbmodem14101]
-
-→ haxelib run hxArduino -monitor
-Starting serial monitor on COM3
+```bash
 Port list: [/dev/cu.Bluetooth-Incoming-Port,/dev/tty.Bluetooth-Incoming-Port]
+        - port: /dev/cu.Bluetooth-Incoming-Port, available: 0,
+        - port: /dev/tty.Bluetooth-Incoming-Port, available: 0, null
+Your guess is as good as mine; try to disconnect and run this command again and see the differences
+```
 
+Possible answer **with** an Arduino connected to your computer:
 
+```bash
+Port list: [/dev/cu.Bluetooth-Incoming-Port,/dev/tty.Bluetooth-Incoming-Port,/dev/cu.usbmodem14101,/dev/tty.usbmodem14101]
+        - port: /dev/cu.Bluetooth-Incoming-Port, available: 0,
+        - port: /dev/tty.Bluetooth-Incoming-Port, available: 0, null
+        - port: /dev/cu.usbmodem14101, available: 11,
+        - port: /dev/tty.usbmodem14101, available: 0, null
+Use: haxelib run hxArduino --test -port /dev/cu.usbmodem14101
+```
 
+## How to set environment variable
 
-haxelib run hxArduino test -port /dev/cu.usbmodem14101
-
-
-## ENV VARS
-
-https://www.schrodinger.com/kb/1842
-
-
-
-OS X 10.10
+#### Methode 1:
 
 To set an environment variable, enter the following command:
 
-```
+```bash
 launchctl setenv variable "value"
 ```
 
 To find out if an environment variable is set, use the following command:
 
-```
+```bash
 launchctl getenv variable
 ```
 
 To clear an environment variable, use the following command:
 
-```
+```bash
 launchctl unsetenv variable
 ```
 
-----
-
-or
+#### Methode 2:
 
 
-
-http://osxdaily.com/2015/07/28/set-enviornment-variables-mac-os-x/
-
-write bash_profile
+Write bash_profile
 
 
 ```bash
 ~/.bash_profile
 nano .bash_profile
-export ARDUINO_HOME=/Applications/Arduino.app
-export ARDUINO_PORT=COM3
+export ARDUINO_HOME=/Applications/Arduino.app/Contents/Java
+export ARDUINO_PORT=/dev/cu.usbmodem14101
 ```
 
-test
+Or just test it:
 
 ```bash
-export ARDUINO_HOME=/Applications/Arduino.app
-export ARDUINO_PORT=COM3
+export ARDUINO_HOME=/Applications/Arduino.app/Contents/Java
+export ARDUINO_PORT=/dev/cu.usbmodem14101
 ```
 
 
 
-<!--
-private static var ARDUINO_HOME:String = "C:\\PROGRA~2\\Arduino";
-private static var ARDUINO_HOME_OSX:String = "/Applications/Arduino.app/Contents/Java";
--->
+Source:
+
+- <https://www.schrodinger.com/kb/1842>
+- <http://osxdaily.com/2015/07/28/set-enviornment-variables-mac-os-x/>
+
+

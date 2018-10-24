@@ -2,7 +2,6 @@
 
 ![](img/arduino_haxe_logo.png)
 
-
 What happens when you combine [Haxe](https://haxe.org/) with [Arduino](https://www.arduino.cc/)?
 
 Haxe has the ability to transpile to cpp, so it's in the realm of posiblities.
@@ -21,12 +20,16 @@ Or as Ian put it
 * Includes basic Arduino externs (`Arduino`, `LiquidCrystal`, `MemoryFree`, custom haxe "bits" like haxe_Log::trace - see: `/lib`)
 * Custom C++ generator
 * [Messy] "compiler" .hx class to compile build / link generated c++
-* Ability to push to Arduino device (hardcoded to COM3 - needs to change!)
-* Ability to start reading from serial com port via hxSerial for program traces (hardcoded to COM3 - needs to change!)
-
+* Ability to push to Arduino device ~~(hardcoded to COM3 - needs to change!)~~
+* Ability to start reading from serial com port via hxSerial for program traces ~~(hardcoded to COM3 - needs to change!)~~
 
 
 Follow Ian Harrigan on:
 
 - [twitter](https://twitter.com/IanHarrigan1982)
 - [github](https://github.com/ianharrigan)
+
+## Issues
+
+If you could point us to the correct direction, create an [issue](https://github.com/ianharrigan/hxArduino/issues).
+Even better would be a pull request!
