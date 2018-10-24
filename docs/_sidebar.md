@@ -13,7 +13,19 @@
 	* [Windows](start/windows.md)
 	* [OSX](start/osx.md)
 	* [Linux (needs love)](start/linux.md)
-	* [build](start/build.md)
+
+* How to build
+	* [options](build/options.md)
+	* [build](build/build.md)
+	* [Build hxArduino](build/project.md)
+
+* Example
+    * [Blink](example/blink.md)
 
 * Notes
+    * [Ports](notes/ports.md)
     * [Baud](notes/baud.md)
+    * [Main](notes/main.md)
+    * [System](notes/system.md)
+    * [Todo](notes/todo.md)
+    * [Syntax](notes/syntax.md)
