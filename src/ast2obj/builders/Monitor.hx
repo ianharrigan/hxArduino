@@ -18,7 +18,11 @@ class Monitor {
             neko.Lib.println ('\t- port: $port, available: $i, $s');
             if(i>0) useport = port;
         }
-        trace('use: haxelib run hxArduino test -port $useport'); // I am guessing here, but it seems to work on osx
+        if(useport != ''){
+            trace('Use: haxelib run hxArduino --test -port $useport'); // I am guessing here, but it seems to work on osx
+        } else {
+            trace('Your guess is as good as mine; try to disconnect and run this command again and see the differences');
+        }
         #else
         trace("No hxSerial");
         #end

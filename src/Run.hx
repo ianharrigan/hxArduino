@@ -21,29 +21,32 @@ class Run {
         Sys.setCwd(dir);
 
         switch (command) {
-            case 'install', '-install':
+            case 'install', '--install':
                 runCommand("install", args);
                 Sys.getChar(false);
-            case 'monitor', '-monitor':
+            case 'monitor', '--monitor':
                 runCommand("monitor", args);
-            case '-p', 'portlist', '-portlist', '--portlist':
+            case '-p', 'portlist', '--portlist':
                 runCommand("portlist", args);
-            case 'test', '-test':
+            case 'test', '--test':
                 runCommand("install", args);
                 runCommand("monitor", args);
+            case '-v', '--version', 'version':
+                trace('Something clever, but not functional at this moment');
             case '-h', '--help', 'help':
-                trace('hxArduino');
-                trace('usage: haxelib run hxArduino [install/monitor/test] [-h] [-v] [-file FOO] [-port BAR]');
+                trace('');
+                trace('[hxArduino] : custom haxe generator to create arduino specific c++');
+                trace('');
+                trace('Usage: haxelib run hxArduino [--install/--monitor/--test/--portlist/--help/--version] [-file FOO] [-port BAR]');
                 trace('');
                 trace('Optional arguments:');
-                trace('     -install            Install Arduino code on device.');
-                trace('     -monitor            Monitor com ports.');
-                trace('     -test               Install and monitor.');
-                trace('     -help               This message .');
+                trace('     --install           Install Arduino code on device.');
+                trace('     --monitor           Monitor ports.');
+                trace('     --test              Install and monitor.');
                 trace('     -p, --portlist      Get list of connected ports.');
                 trace('     -h, --help          Show this help message and exit.');
                 trace('     -v, --version       Show program\'s version number and exit.');
-                trace('     -file               install hexfile (no idea?).');
+                trace('     -file               Install hexfile (no idea?).');
                 trace('     -port               Port to use.');
             default :
                 trace("Unknown command '" + command + "'");
