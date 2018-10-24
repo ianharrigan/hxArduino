@@ -36,7 +36,7 @@ class Installer {
         }
 
         trace("Installing: " + hexFile + " via " + port);
-        var params:Array<String> = '${ARDUINO_HOME}/hardware/tools/avr/etc/avrdude.conf -v -patmega328p -carduino -P${port} -b115200 -D'.split(" ");
+        var params:Array<String> = '-C${ARDUINO_HOME}/hardware/tools/avr/etc/avrdude.conf -v -patmega328p -carduino -P${port} -b115200 -D'.split(" ");
         params.push('-Uflash:w:${hexFile}:i');
         var n = new ProcessHelper().run(DUDE, params);
         if (n != 0) {
