@@ -113,11 +113,16 @@ class ArduinoCPPBuilder {
             if (cv.type.typeParameters.length > 0) {
                 sb.add("<");
                 for (i in 0...cv.type.typeParameters.length) {
-                    if (isInternalType(cv.type.typeParameters[i].safeName)) {
-                        sb.add(substTypeName(cv.type.typeParameters[i].safeName));
+                    var oclass = findClass(cv.type.typeParameters[i].name);
+                    var varTypeName = cv.type.typeParameters[i].safeName;
+                    if (oclass != null && oclass.externName != null) {
+                        varTypeName = oclass.externName;
+                    }
+                    if (isInternalType(varTypeName)) {
+                        sb.add(substTypeName(varTypeName));
                     } else {
                         sb.add("AutoPtr<");
-                        sb.add(substTypeName(cv.type.typeParameters[i].safeName));
+                        sb.add(substTypeName(varTypeName));
                         sb.add(">");
                         addRef("AutoPtr");
                     }
@@ -217,14 +222,18 @@ class ArduinoCPPBuilder {
         for (i in 0... m.args.length) {
             var arg = m.args[i];
             var oclass = findClass(arg.type.name);
-            if (isInternalType(substTypeName(arg.type.safeName))) {
-                sb.add(substTypeName(arg.type.safeName));
+            var varTypeName = arg.type.safeName;
+            if (oclass != null && oclass.externName != null) {
+                varTypeName = oclass.externName;
+            }
+            if (isInternalType(substTypeName(varTypeName))) {
+                sb.add(substTypeName(varTypeName));
             } else if (oclass.stackOnly) {
-                sb.add(substTypeName(arg.type.safeName));
+                sb.add(substTypeName(varTypeName));
                 sb.add("&");
             } else {
                 sb.add("AutoPtr<");
-                sb.add(substTypeName(arg.type.safeName));
+                sb.add(substTypeName(varTypeName));
                 sb.add(">");
                 addRef("AutoPtr");
             }
