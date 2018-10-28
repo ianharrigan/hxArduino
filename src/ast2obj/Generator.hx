@@ -178,10 +178,13 @@ class Generator {
                 oexpr.id = v.id;
                 cast(oexpr, OLocal).name = v.name;
                 cast(oexpr, OLocal).type = buildType(v.t);
-            case TIf(econd, eif, null):
+            case TIf(econd, eif, eelse):
                 oexpr = new OIf();
                 cast(oexpr, OIf).conditionExpression = buildExpression(econd, oexpr);
                 cast(oexpr, OIf).ifExpression = buildExpression(eif, oexpr);
+                if (eelse != null) {
+                    cast(oexpr, OIf).elseExpression = buildExpression(eelse, oexpr);
+                }
             case TParenthesis(e):
                 oexpr = new OParenthesis();
                 oexpr.nextExpression = buildExpression(e, oexpr);

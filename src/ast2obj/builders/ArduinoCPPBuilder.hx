@@ -343,12 +343,17 @@ class ArduinoCPPBuilder {
             sb.add(buildExpression(olocal.nextExpression, tabs));
         } else if (Std.is(e, OIf)) {
             var oif = cast(e, OIf);
-            sb.add("\n");
-            sb.add(tabs);
+            //sb.add("\n");
+            //sb.add(tabs);
             sb.add("if ");
             sb.add(buildExpression(oif.conditionExpression, tabs));
             sb.add(" ");
             sb.add(buildExpression(oif.ifExpression, tabs));
+            if (oif.elseExpression != null) {
+                sb.add(tabs);
+                sb.add("else ");
+                sb.add(buildExpression(oif.elseExpression, tabs));
+            }
         } else if (Std.is(e, OParenthesis)) {
             var oparenthesis = cast(e, OParenthesis);
             sb.add("(");
