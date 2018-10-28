@@ -244,6 +244,7 @@ class Generator {
                 oexpr = buildExpression(e, prevExpression);
             case TSwitch(e, cases, edef):
                 oexpr = new OSwitch();
+                cast(oexpr, OSwitch).type = buildType(e.t);
                 cast(oexpr, OSwitch).expression = buildExpression(e, oexpr);
                 for (c in cases) {
                     var ocase = new OCase();
