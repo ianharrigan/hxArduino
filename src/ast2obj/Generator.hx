@@ -16,11 +16,9 @@ class Generator {
     #end
     
     public static function onGenerate(types:Array<Type>):Void {
-        /*
         haxe.Log.trace = function(v:Dynamic, ?infos:haxe.PosInfos) { 
           Sys.println(v);
         }
-        */
         
         var oclasses = [];
         
@@ -41,7 +39,7 @@ class Generator {
         ArduinoCPPBuilder.build();
         
         var libraries:Array<String> = ArduinoCPPBuilder.libraries;
-        //Compiler.compile(ArduinoCPPBuilder.srcPath, ArduinoCPPBuilder.includePath, ArduinoCPPBuilder.outPath, libraries);
+        Compiler.compile(ArduinoCPPBuilder.srcPath, ArduinoCPPBuilder.includePath, ArduinoCPPBuilder.outPath, libraries);
     }
     
     private static function buildClass(c:Ref<ClassType>, params:Array<Type>):OClass {
