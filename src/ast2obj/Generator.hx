@@ -16,9 +16,11 @@ class Generator {
     #end
     
     public static function onGenerate(types:Array<Type>):Void {
+        /*
         haxe.Log.trace = function(v:Dynamic, ?infos:haxe.PosInfos) { 
           Sys.println(v);
         }
+        */
         
         var oclasses = [];
         
@@ -39,7 +41,7 @@ class Generator {
         ArduinoCPPBuilder.build();
         
         var libraries:Array<String> = ArduinoCPPBuilder.libraries;
-        Compiler.compile(ArduinoCPPBuilder.srcPath, ArduinoCPPBuilder.includePath, ArduinoCPPBuilder.outPath, libraries);
+        //Compiler.compile(ArduinoCPPBuilder.srcPath, ArduinoCPPBuilder.includePath, ArduinoCPPBuilder.outPath, libraries);
     }
     
     private static function buildClass(c:Ref<ClassType>, params:Array<Type>):OClass {
@@ -240,6 +242,21 @@ class Generator {
                 oexpr = new OTypeExprClass();
                 cast(oexpr, OTypeExprClass).cls = new OClass();
                 cast(oexpr, OTypeExprClass).cls.fullName += c.toString();
+            case TMeta(m, e):
+                oexpr = buildExpression(e, prevExpression);
+            case TSwitch(e, cases, edef):
+                oexpr = new OSwitch();
+                cast(oexpr, OSwitch).expression = buildExpression(e, oexpr);
+                for (c in cases) {
+                    var ocase = new OCase();
+                    cast(oexpr, OSwitch).cases.push(ocase);
+                    for (t in c.values) {
+                        ocase.caseExpressions.push(buildExpression(t, oexpr));
+                        ocase.expression = buildExpression(c.expr, oexpr);
+                        buildExpression(t, oexpr);
+                    }
+                }
+                cast(oexpr, OSwitch).defaultExpression = buildExpression(edef, oexpr);
             case _:
                 trace("buildExpression not impl: " + e.expr);
         }

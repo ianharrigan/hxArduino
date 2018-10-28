@@ -470,6 +470,47 @@ class ArduinoCPPBuilder {
         } else if (Std.is(e, OConstantIdentifier)) {
             var oconstantidentifier = cast(e, OConstantIdentifier);
             sb.add(oconstantidentifier.name);
+        } else if (Std.is(e, OSwitch)) {
+            var oswitch = cast(e, OSwitch);
+            sb.add("switch ");
+            sb.add(buildExpression(oswitch.expression, tabs));
+            sb.add(" {\n");
+            var tabs2 = tabs + tabs;
+            for (ocase in oswitch.cases) {
+                var ncase = 0;
+                for (caseExpression in ocase.caseExpressions) {
+                    sb.add(tabs2);
+                    sb.add("case ");
+                    
+                    if (Std.is(caseExpression, OConstant)) {
+                        var oconstant = cast(caseExpression, OConstant);
+                        sb.add(oconstant.value);
+                    } else {
+                        sb.add(buildExpression(caseExpression, tabs));
+                    }
+                    sb.add(": ");
+                    if (ncase < ocase.caseExpressions.length - 1) {
+                        sb.add("\n");
+                    }
+                    ncase++;
+                }
+                
+                sb.add(buildExpression(ocase.expression, tabs2));
+                
+                sb.add(tabs2);
+                sb.add("break;\n\n");
+            }
+            
+            if (oswitch.defaultExpression != null) {
+                sb.add(tabs2);
+                sb.add("default: ");
+                sb.add(buildExpression(oswitch.defaultExpression, tabs2));
+                sb.add(tabs2);
+                sb.add("break;\n\n");
+            }
+            
+            sb.add(tabs);
+            sb.add("}");
         } else {
             trace("ArduinoCPPBuilder::buildExpression - " + Type.getClassName(Type.getClass(e)));
         }
