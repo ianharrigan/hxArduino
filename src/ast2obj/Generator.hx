@@ -181,9 +181,13 @@ class Generator {
             case TIf(econd, eif, eelse):
                 oexpr = new OIf();
                 cast(oexpr, OIf).conditionExpression = buildExpression(econd, oexpr);
-                var ifBlock:OBlock = new OBlock();
-                ifBlock.expressions.push(buildExpression(eif, oexpr));
-                cast(oexpr, OIf).ifExpression = ifBlock;
+                if (isBlock(eif) == false) {
+                    var ifBlock:OBlock = new OBlock();
+                    ifBlock.expressions.push(buildExpression(eif, oexpr));
+                    cast(oexpr, OIf).ifExpression = ifBlock;
+                } else {
+                    cast(oexpr, OIf).ifExpression = buildExpression(eif, oexpr);
+                }
                 if (eelse != null) {
                     cast(oexpr, OIf).elseExpression = buildExpression(eelse, oexpr);
                 }
@@ -267,6 +271,15 @@ class Generator {
         }
         
         return oexpr;
+    }
+    
+    private static function isBlock(e:TypedExpr):Bool {
+        switch (e.expr) {
+            case TBlock(_):
+                return true;
+            case _:    
+        }
+        return false;
     }
     
     private static function buildConstant(c:Null<TConstant>):OConstant {
