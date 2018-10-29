@@ -181,9 +181,13 @@ class Generator {
             case TIf(econd, eif, eelse):
                 oexpr = new OIf();
                 cast(oexpr, OIf).conditionExpression = buildExpression(econd, oexpr);
-                cast(oexpr, OIf).ifExpression = buildExpression(eif, oexpr);
+                var ifBlock:OBlock = new OBlock();
+                ifBlock.expressions.push(buildExpression(eif, oexpr));
+                cast(oexpr, OIf).ifExpression = ifBlock;
                 if (eelse != null) {
-                    cast(oexpr, OIf).elseExpression = buildExpression(eelse, oexpr);
+                    var elseBlock = new OBlock();
+                    elseBlock.expressions.push(buildExpression(eelse, oexpr));
+                    cast(oexpr, OIf).elseExpression = elseBlock;
                 }
             case TParenthesis(e):
                 oexpr = new OParenthesis();
