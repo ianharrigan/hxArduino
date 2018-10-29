@@ -185,9 +185,7 @@ class Generator {
                 ifBlock.expressions.push(buildExpression(eif, oexpr));
                 cast(oexpr, OIf).ifExpression = ifBlock;
                 if (eelse != null) {
-                    var elseBlock = new OBlock();
-                    elseBlock.expressions.push(buildExpression(eelse, oexpr));
-                    cast(oexpr, OIf).elseExpression = elseBlock;
+                    cast(oexpr, OIf).elseExpression = buildExpression(eelse, oexpr);
                 }
             case TParenthesis(e):
                 oexpr = new OParenthesis();
