@@ -88,6 +88,28 @@ class Generator {
             }
         }
         
+        var fields:Array<ClassField> = classType.statics.get();
+        for (f in fields) {
+            switch (f.kind) {
+                case FVar(read, write):
+                    if (read == AccInline && write == AccNever) {
+                        // lets skip static inline constants, they will be replaced in the AST 
+                        // with the actual value anyway
+                        continue;
+                    }
+                    var oclassvar = buildClassVar(oclass, f.expr());
+                    if (oclassvar != null) {
+                        oclassvar.type = buildType(f.type);
+                        oclassvar.cls = oclass;
+                        oclassvar.name = f.name;
+                        oclassvar.isStatic = true;
+                        oclassvar.isConst = (read == AccInline && write == AccNever);
+                        oclass.classVars.push(oclassvar);
+                    }
+                case _: 
+                    trace("buildClass static not impl: " + f.kind);
+            }
+        }
         return oclass;
     }
     

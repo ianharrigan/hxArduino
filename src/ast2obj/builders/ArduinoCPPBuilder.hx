@@ -95,49 +95,19 @@ class ArduinoCPPBuilder {
         
         for (cv in c.classVars) {
             sb.add("        ");
-            var oclass = findClass(cv.type.name);
-            var varTypeName:String = cv.type.safeName;
-            if (oclass != null && oclass.externName != null) {
-                varTypeName = oclass.externName;
+            
+            if (cv.isStatic == true) {
+                sb.add("static ");
             }
-            if (isInternalType(substTypeName(varTypeName))) {
-                sb.add(substTypeName(varTypeName));
-            } else if (oclass.stackOnly == true) {
-                sb.add(substTypeName(varTypeName));
-            } else {
-                sb.add("AutoPtr<");
-                sb.add(substTypeName(varTypeName));
-                sb.add(">");
-                addRef("AutoPtr");
+            if (cv.isConst == true) {
+                sb.add("const ");
             }
             
-            if (cv.type.typeParameters.length > 0) {
-                sb.add("<");
-                for (i in 0...cv.type.typeParameters.length) {
-                    var oclass = findClass(cv.type.typeParameters[i].name);
-                    var varTypeName = cv.type.typeParameters[i].safeName;
-                    if (oclass != null && oclass.externName != null) {
-                        varTypeName = oclass.externName;
-                    }
-                    if (isInternalType(varTypeName)) {
-                        sb.add(substTypeName(varTypeName));
-                    } else {
-                        sb.add("AutoPtr<");
-                        sb.add(substTypeName(varTypeName));
-                        sb.add(">");
-                        addRef("AutoPtr");
-                    }
-                    if (i < cv.type.typeParameters.length - 1) {
-                        sb.add(", ");
-                    }
-                }
-                sb.add(">");
-            }
-            
+            sb.add(buildClassVarType(cv));
             sb.add(" ");
             sb.add(cv.name);
             
-            if (cv.expression != null) {
+            if (cv.expression != null && cv.isStatic == false) {
                 sb.add(" = ");
                 sb.add(buildExpression(cv.expression, "        "));
                 sb.add(";");
@@ -168,7 +138,6 @@ class ArduinoCPPBuilder {
         File.saveContent(filename, contents);
     }
     
-    
     private static function buildClassImpl(c:OClass){
         
         _refs = [];
@@ -179,6 +148,21 @@ class ArduinoCPPBuilder {
         sb.add("%INCLUDES%\n");
         
         var filename = Path.normalize(srcPath + "/" + c.safeName + ".cpp");
+        
+        for (cv in c.classVars) {
+            if (cv.isStatic && cv.expression != null) {
+                sb.add(buildClassVarType(cv));
+                sb.add(" ");
+                sb.add(c.safeName);
+                sb.add("::");
+                sb.add(cv.name);
+                sb.add(" = ");
+                sb.add(buildExpression(cv.expression, "        "));
+                sb.add(";\n");
+            }
+        }
+
+        sb.add("\n");
         
         for (m in c.methods) {
             _currentMethod = m;
@@ -196,6 +180,50 @@ class ArduinoCPPBuilder {
         File.saveContent(filename, contents);
     }
     
+    private static function buildClassVarType(cv:OClassVar) {
+        var sb:StringBuf = new StringBuf();
+        
+        var oclass = findClass(cv.type.name);
+        var varTypeName:String = cv.type.safeName;
+        if (oclass != null && oclass.externName != null) {
+            varTypeName = oclass.externName;
+        }
+        if (isInternalType(substTypeName(varTypeName))) {
+            sb.add(substTypeName(varTypeName));
+        } else if (oclass.stackOnly == true) {
+            sb.add(substTypeName(varTypeName));
+        } else {
+            sb.add("AutoPtr<");
+            sb.add(substTypeName(varTypeName));
+            sb.add(">");
+            addRef("AutoPtr");
+        }
+        
+        if (cv.type.typeParameters.length > 0) {
+            sb.add("<");
+            for (i in 0...cv.type.typeParameters.length) {
+                var oclass = findClass(cv.type.typeParameters[i].name);
+                var varTypeName = cv.type.typeParameters[i].safeName;
+                if (oclass != null && oclass.externName != null) {
+                    varTypeName = oclass.externName;
+                }
+                if (isInternalType(varTypeName)) {
+                    sb.add(substTypeName(varTypeName));
+                } else {
+                    sb.add("AutoPtr<");
+                    sb.add(substTypeName(varTypeName));
+                    sb.add(">");
+                    addRef("AutoPtr");
+                }
+                if (i < cv.type.typeParameters.length - 1) {
+                    sb.add(", ");
+                }
+            }
+            sb.add(">");
+        }
+        
+        return sb;
+    }
     
     private static function buildMethod(m:OMethod, tabs:String, header:Bool = true) {
         var sb:StringBuf = new StringBuf();

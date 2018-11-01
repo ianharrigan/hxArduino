@@ -6,6 +6,7 @@ class OClassVar {
     public var type:OType;
     public var name:String;
     public var isStatic:Bool = false;
+    public var isConst:Bool = false;
     public var expression:OExpression;
     
     public function new() {
