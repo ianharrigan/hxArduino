@@ -9,6 +9,7 @@ class OClass  {
     public var externName:String = null;
     public var externIncludes:Array<String> = null;
     
+    public var constructor:OMethod = null;
     public var methods:Array<OMethod> = [];
     public var classVars:Array<OClassVar> = [];
     

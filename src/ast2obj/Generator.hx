@@ -65,6 +65,14 @@ class Generator {
         oclass.stackOnly = hasMeta(c.get().meta, ":stackOnly");
         
         var classType:ClassType = c.get();
+        
+        if (classType.constructor != null) {
+            oclass.constructor = buildMethod(oclass, classType.constructor.get().expr());
+            if (oclass.constructor != null) {
+                oclass.constructor.cls = oclass;
+            }
+        }
+        
         var fields:Array<ClassField> = classType.fields.get();
         for (f in fields) {
             switch (f.kind) {

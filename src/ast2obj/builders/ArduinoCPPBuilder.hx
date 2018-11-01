@@ -118,6 +118,13 @@ class ArduinoCPPBuilder {
         }
         sb.add("\n");
         
+        if (c.constructor != null) {
+            c.constructor.name = c.safeName;
+            _currentMethod = c.constructor;
+            sb.add(buildMethod(c.constructor, "        "));
+            sb.add("\n");
+        }
+        
         for (m in c.methods) {
             _currentMethod = m;
             sb.add(buildMethod(m, "        "));
@@ -163,6 +170,13 @@ class ArduinoCPPBuilder {
         }
 
         sb.add("\n");
+        
+        if (c.constructor != null) {
+            c.constructor.name = c.safeName;
+            _currentMethod = c.constructor;
+            sb.add(buildMethod(c.constructor, "", false));
+            sb.add("\n");
+        }
         
         for (m in c.methods) {
             _currentMethod = m;
@@ -234,18 +248,23 @@ class ArduinoCPPBuilder {
         }
         
         var oclass = findClass(m.type.name);
-        if (isInternalType(substTypeName(m.type.safeName))) {
+        if (m == m.cls.constructor) { // its the constructor, drop the return type
+            sb.add("");
+        } else if (isInternalType(substTypeName(m.type.safeName))) {
             sb.add(substTypeName(m.type.safeName));
+            sb.add(" ");
         } else if (oclass.stackOnly == true) {
             sb.add(substTypeName(m.type.safeName));
             sb.add("&");
+            sb.add(" ");
         } else {
             sb.add("AutoPtr<");
             sb.add(substTypeName(m.type.safeName));
             sb.add(">");
             addRef("AutoPtr");
+            sb.add(" ");
         }
-        sb.add(" ");
+        
         if (header == false) {
             sb.add(m.cls.safeName);
             sb.add("::");
