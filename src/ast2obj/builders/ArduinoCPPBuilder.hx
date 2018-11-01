@@ -229,6 +229,10 @@ class ArduinoCPPBuilder {
         var sb:StringBuf = new StringBuf();
         sb.add(tabs);
         
+        if (header == true && m.isStatic == true) {
+            sb.add("static ");
+        }
+        
         var oclass = findClass(m.type.name);
         if (isInternalType(substTypeName(m.type.safeName))) {
             sb.add(substTypeName(m.type.safeName));
@@ -616,8 +620,6 @@ class ArduinoCPPBuilder {
                 sb.add(c.value);
             case "String":
                 sb.add("String(\"" + c.value + "\")");
-                // TODO: always a good idea to "F" (flash mem) ? Not sure...
-                //sb.add("F(\"" + c.value + "\")");
             case "this":
                 sb.add("this");
             case "null":

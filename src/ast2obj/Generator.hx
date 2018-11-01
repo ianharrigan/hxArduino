@@ -91,6 +91,14 @@ class Generator {
         var fields:Array<ClassField> = classType.statics.get();
         for (f in fields) {
             switch (f.kind) {
+                case FMethod(k):
+                    var omethod = buildMethod(oclass, f.expr());
+                    if (omethod != null) {
+                        omethod.cls = oclass;
+                        omethod.name = f.name;
+                        omethod.isStatic = true;
+                        oclass.methods.push(omethod);
+                    }
                 case FVar(read, write):
                     if (read == AccInline && write == AccNever) {
                         // lets skip static inline constants, they will be replaced in the AST 
