@@ -257,11 +257,23 @@ class Generator {
                     cast(oexpr, OSwitch).cases.push(ocase);
                     for (t in c.values) {
                         ocase.caseExpressions.push(buildExpression(t, oexpr));
-                        ocase.expression = buildExpression(c.expr, oexpr);
+                        if (isBlock(c.expr) == false) {
+                            var caseBlock:OBlock = new OBlock();
+                            caseBlock.expressions.push(buildExpression(c.expr, oexpr));
+                            ocase.expression = caseBlock;
+                        } else {
+                            ocase.expression = buildExpression(c.expr, oexpr);
+                        }
                         buildExpression(t, oexpr);
                     }
                 }
-                cast(oexpr, OSwitch).defaultExpression = buildExpression(edef, oexpr);
+                if (isBlock(edef) == false) {
+                    var caseBlock:OBlock = new OBlock();
+                    caseBlock.expressions.push(buildExpression(edef, oexpr));
+                    cast(oexpr, OSwitch).defaultExpression = caseBlock;
+                } else {
+                    cast(oexpr, OSwitch).defaultExpression = buildExpression(edef, oexpr);
+                }
             case _:
                 trace("buildExpression not impl: " + e.expr);
         }
