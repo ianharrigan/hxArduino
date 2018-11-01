@@ -44,7 +44,7 @@ class Generator {
     
     private static function buildClass(c:Ref<ClassType>, params:Array<Type>):OClass {
         if (c.toString() == "Array" || c.toString() == "Std" || c.toString() == "ArrayAccess" || c.toString() == "String" || c.toString() == "Type"
-            || StringTools.startsWith(c.toString(), "haxe.")) {
+            || StringTools.startsWith(c.toString(), "haxe.") || c.toString() == "IntIterator") {
             trace("Skipping: " + c.toString());
             return null;
         } else {
@@ -338,6 +338,9 @@ class Generator {
             case TString(s):    
                 oconstant.type = "String";
                 oconstant.value = s;
+            case TBool(b):    
+                oconstant.type = "Bool";
+                oconstant.value = b;
             case TThis:
                 oconstant.type = "this";
             case TNull:

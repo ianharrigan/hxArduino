@@ -343,7 +343,7 @@ class ArduinoCPPBuilder {
                 if (oclass != null && oclass.isExtern == true && oclass.externName != null) {
                     varTypeName = oclass.externName;
                 }
-                if (oclass.stackOnly == true) {
+                if (oclass != null && oclass.stackOnly == true) {
                     sb.add(substTypeName(varTypeName));
                 } else {
                     sb.add("AutoPtr<");
@@ -620,6 +620,8 @@ class ArduinoCPPBuilder {
                 sb.add(c.value);
             case "String":
                 sb.add("String(\"" + c.value + "\")");
+            case "Bool":
+                sb.add(c.value);
             case "this":
                 sb.add("this");
             case "null":
@@ -639,22 +641,26 @@ class ArduinoCPPBuilder {
                 typeName = "String";
             case "Int":
                 typeName = "int";
+            case "Bool":
+                typeName = "bool";
             case "Void":
                 typeName = "void";
             case _:
         }
         
         //addRef(typeName);
-        var oclass = findClass(typeName);
-        if (oclass != null) {
-            if (oclass.isExtern == true) {
-                //addRef(oclass.externName);
-                addRefs(oclass.externIncludes);
+        if (isInternalType(typeName) == false) {
+            var oclass = findClass(typeName);
+            if (oclass != null) {
+                if (oclass.isExtern == true) {
+                    //addRef(oclass.externName);
+                    addRefs(oclass.externIncludes);
+                } else {
+                    addRef(oclass.safeName);
+                }
             } else {
-                addRef(oclass.safeName);
+                addRef(typeName);
             }
-        } else {
-            addRef(typeName);
         }
         
         return typeName;
@@ -731,7 +737,7 @@ class ArduinoCPPBuilder {
     
     private static function isInternalType(typeName:String):Bool {
         switch (typeName) {
-            case "int" | "LinkedList" | "String" | "void" | "Void":
+            case "int" | "LinkedList" | "String" | "void" | "Void" | "bool":
                 return true;
         }
         return false;
