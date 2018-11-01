@@ -1,4 +1,5 @@
 package ast2obj.builders;
+import ast2obj.OCall;
 import ast2obj.OClass;
 import ast2obj.OConstant;
 import ast2obj.OExpression;
@@ -290,7 +291,15 @@ class ArduinoCPPBuilder {
             sb.add("return ");
             sb.add(buildExpression(e.nextExpression, tabs));
         } else if (Std.is(e, OConstant)) {
-            sb.add(buildConstant(cast(e, OConstant)));
+            if (cast(e, OConstant).type == "String" && isBinop(e.prevExpression) == false && isBinop(e.nextExpression) == false && isCall(e.prevExpression) == true) {
+                // lets make an optimization here, if we are using strings, and we arent doing anything
+                // with them, ie, not adding or subdtracting them, not assigning them and just using
+                // them in a function call, lets put them in the flash program storage with the "F()" 
+                // macro, this saves alot of heap space... but they are read only! 
+                sb.add("F(\"" + cast(e, OConstant).value + "\")");
+            } else {
+                sb.add(buildConstant(cast(e, OConstant)));
+            }
             sb.add(buildExpression(e.nextExpression, tabs));
         } else if (Std.is(e, OVar)) {
             var ovar = cast(e, OVar);
@@ -556,6 +565,19 @@ class ArduinoCPPBuilder {
         }
         
         return sb.toString();
+    }
+    
+    private static function isCall(e:OExpression):Bool {
+        if (Std.is(e, OCall) == false) {
+            return false;
+        }
+        
+        var ocall:OCall = cast(e, OCall);
+        return true;
+    }
+    
+    private static function isBinop(e:OExpression):Bool {
+        return Std.is(e, OBinOp);
     }
     
     private static function buildConstant(c:OConstant) {
