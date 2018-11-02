@@ -623,7 +623,6 @@ class ArduinoCPPBuilder {
             return false;
         }
         
-        var ocall:OCall = cast(e, OCall);
         return true;
     }
     
@@ -720,7 +719,7 @@ class ArduinoCPPBuilder {
             return;
         }
 
-        if (typeName == "Serial") {
+        if (typeName == "Serial" || typeName == "Std") {
             return;
         }
         
