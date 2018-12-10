@@ -1,9 +1,9 @@
 {
 	"name": "hxArduino",
 	"license": "MIT",
-	"tags": [],
-	"description": "",
-	"contributors": ["haxeui", "ianharrigan"],
+	"tags": ["arduino"],
+	"description": "custom haxe generator to create arduino specific c++",
+	"contributors": ["ianharrigan"],
 	"releasenote": "",
 	"version": "1.0.0",
 	"classPath": "src",
