@@ -11,7 +11,7 @@
 
 * `haxelib install hxArduino`
 * `haxe -lib hxArduino -cp src -no-output -main Main`
-* `haxelib run hxArduino -test
+* `haxelib run hxArduino -test`
 
 # Notes
 * Must have an `ARDUINO_HOME` environment variable set (eg: `C:\\PROGRA~2\\Arduino`)
