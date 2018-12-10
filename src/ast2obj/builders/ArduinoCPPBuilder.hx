@@ -153,7 +153,8 @@ class ArduinoCPPBuilder {
 
         sb.add("#include \"" + c.safeName + ".h\"\n");
         sb.add("%INCLUDES%\n");
-        
+        sb.add("#define Util_addressOf(x) (byte*)&x\n");
+
         var filename = Path.normalize(srcPath + "/" + c.safeName + ".cpp");
         
         for (cv in c.classVars) {
@@ -636,6 +637,8 @@ class ArduinoCPPBuilder {
         switch (c.type) {
             case "Int":
                 sb.add(c.value);
+            case "Float":
+                sb.add(c.value);
             case "String":
                 sb.add("String(\"" + c.value + "\")");
             case "Bool":
@@ -663,6 +666,8 @@ class ArduinoCPPBuilder {
                 typeName = "bool";
             case "Void":
                 typeName = "void";
+            case "Float":
+                typeName = "float";
             case _:
         }
         
@@ -701,6 +706,11 @@ class ArduinoCPPBuilder {
             switch (fieldName) {
                 case "is":
                     return "Std_is";
+            }
+        } else if (className == "Util") {
+            switch (fieldName) {
+                case "addressOf":
+                    return "Util_addressOf";
             }
         }
         return className + "::" + fieldName;
@@ -755,7 +765,7 @@ class ArduinoCPPBuilder {
     
     private static function isInternalType(typeName:String):Bool {
         switch (typeName) {
-            case "int" | "LinkedList" | "String" | "void" | "Void" | "bool":
+            case "int" | "LinkedList" | "String" | "void" | "Void" | "bool" | "float":
                 return true;
         }
         return false;

@@ -8,6 +8,10 @@ extern class Serial {
 
     public static function begin(baud:Int):Void;
     public static function println(value:String):Void;
+    public static function available():Int;
+    public static function read():Int;
+    @:overload(function(val:Int, len:Int):Int {})
+    public static function write(val:Int):Int;
     // public static function print(value:Dynamic, ?format:String):Void;
 
 /**
