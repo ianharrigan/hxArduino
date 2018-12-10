@@ -9,8 +9,7 @@
 
 # Usage
 
-* Download hxArduino to folder
-* `haxelib dev hxArduino path/to/folder`
+* `haxelib install hxArduino`
 * `haxe -lib hxArduino -cp src -no-output -main Main`
 * `haxelib run hxArduino -test
 
