@@ -1,4 +1,4 @@
-// call the given macro before typing anything else
+# call the given macro before typing anything else
 --macro ast2obj.Generator.generate()
-// compiles but does not generate any file
+# compiles but does not generate any file
 --no-output
