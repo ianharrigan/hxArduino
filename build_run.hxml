@@ -1,4 +1,4 @@
 -cp src 
--main Run 
+-main Run
 -lib hxSerial
 -neko run.n
