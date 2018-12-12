@@ -23,6 +23,10 @@ extern class Arduino {
     public static inline var HIGH:Int = untyped 'HIGH';
     public static inline var LOW:Int = untyped 'LOW';
 
+    public static inline var CHANGE:Int = untyped 'CHANGE';
+    public static inline var RISING:Int = untyped 'RISING';
+    public static inline var FALLING:Int = untyped 'FALLING';
+
     public static inline var MSBFIRST : Int = untyped 'MSBFIRST';
     public static inline var LSBFIRST : Int = untyped 'LSBFIRST';
 
@@ -177,7 +181,84 @@ extern class Arduino {
     static function tan( rad : Float ) : Float;
 
     // --- Characters
-    //TODO
+
+    /**
+        Analyse if a char is alpha (that is a letter).
+        Returns true if `thisChar` contains a letter.
+    **/
+    static function isAlpha( thisChar : Int ) : Int;
+
+    /**
+        Analyse if a char is alphanumeric (that is a letter or a numbers).
+        Returns true if `thisChar` contains either a number or a letter.
+    **/
+    static function isAlphaNumeric( thisChar : Int ) : Int;
+
+    /**
+        Analyse if a char is Ascii.
+        Returns true if `thisChar` contains an Ascii character.
+    **/
+    static function isAscii( thisChar : Int ) : Int;
+
+    /**
+        Analyse if a char is a control character.
+        Returns true if `thisChar` contains is a control character.
+    **/
+    static function isControl( thisChar : Int ) : Int;
+
+    /**
+        Analyse if a char is a digit.
+        Returns true if `thisChar` is a number.
+    **/
+    static function isDigit( thisChar : Int ) : Int;
+
+    /**
+        Analyse if a char is printable with some content (space is printable but has no content).
+        Returns true if `thisChar` is printable.
+    **/
+    static function isGraph( thisChar : Int ) : Int;
+
+    /**
+        Analyse if a char is an hexadecimal digit (A-F, 0-9).
+        Returns true if `thisChar` contains an hexadecimal digit.
+    **/
+    static function isHexadecimalDigit( thisChar : Int ) : Int;
+
+    /**
+        Analyse if a char is lower case (that is a letter in lower case).
+        Returns true if `thisChar` contains a letter in lower case.
+    **/
+    static function isLowerCase( thisChar : Int ) : Int;
+
+    /**
+        Analyse if a char is printable (that is any character that produces an output, even a blank space).
+        Returns true if `thisChar` is printable.
+    **/
+    static function isPrintable( thisChar : Int ) : Int;
+
+    /**
+        Analyse if a char is punctuation (that is a comma, a semicolon, an exlamation mark and so on).
+        Returns true if `thisChar` is punctuation.
+    **/
+    static function isPunct( thisChar : Int ) : Int;
+
+    /**
+        Analyse if a char is the space character.
+        Returns true if `thisChar` contains the space character.
+    **/
+    static function isSpace( thisChar : Int ) : Int;
+
+    /**
+        Analyse if a char is upper case (that is, a letter in upper case).
+        Returns true if `thisChar` is upper case.
+    **/
+    static function isUpperCase( thisChar : Int ) : Int;
+
+    /**
+        Analyse if a char is a white space, that is space, formfeed ('\f'), newline ('\n'), carriage return ('\r'), horizontal tab ('\t'), and vertical tab ('\v')).
+        Returns true if `thisChar` contains a white space.
+    **/
+    static function isWhitespace( thisChar : Int ) : Int;
 
     // --- Random Numbers
 
@@ -193,18 +274,63 @@ extern class Arduino {
     static function randomSeed( max : Float ) : Void;
 
     // --- Bits and Bytes
-    //TODO
+
+    /**
+        Computes the value of the specified bit (bit 0 is 1, bit 1 is 2, bit 2 is 4, etc.).
+    **/
+    static function bit( n : Int ) : Int;
+
+    /**
+        Clears (writes a 0 to) a bit of a numeric variable.
+    **/
+    static function bitClear( x : Int, n : Int ) : Void;
+
+    /**
+        Reads a bit of a number.
+    **/
+    static function bitRead( x : Int, n : Int ) : Int;
+
+    /**
+        Sets (writes a 1 to) a bit of a numeric variable.
+    **/
+    static function bitSet( x : Int, n : Int ) : Void;
+
+    /**
+        Writes a bit of a numeric variable.
+    **/
+    static function bitWrite( x : Int, n : Int ) : Void;
+
+    /**
+        Extracts the high-order (leftmost) byte of a word (or the second lowest byte of a larger data type).
+    **/
+    static function highByte( x : Int ) : Int;
+
+    /**
+        Extracts the low-order (rightmost) byte of a variable (e.g. a word).
+    **/
+    static function lowByte( x : Int ) : Int;
 
     // --- External Interrupts
-    //TODO
+
+    /**
+    **/
+    static function attachInterrupt( pin : Int, ISR : Void->Void, mode : Int ) : Void;
+
+    /**
+        Turns off the given interrupt.
+    **/
+    static function detachInterrupt( pin : Int ) : Void;
 
     // --- Interrupts
-    //TODO
 
-    // --- Communication
-    //TODO
+    /**
+        Re-enables interrupts.
+    **/
+    static function interrupts() : Void;
 
-    // --- USB
-    //TODO
+    /**
+        Disables interrupts.
+    **/
+    static function noInterrupts() : Void;
 
 }
