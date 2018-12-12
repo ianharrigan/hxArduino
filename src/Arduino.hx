@@ -23,6 +23,10 @@ extern class Arduino {
     public static inline var HIGH:Int = untyped 'HIGH';
     public static inline var LOW:Int = untyped 'LOW';
 
+    public static inline var CHANGE:Int = untyped 'CHANGE';
+    public static inline var RISING:Int = untyped 'RISING';
+    public static inline var FALLING:Int = untyped 'FALLING';
+
     public static inline var MSBFIRST : Int = untyped 'MSBFIRST';
     public static inline var LSBFIRST : Int = untyped 'LSBFIRST';
 
@@ -310,12 +314,12 @@ extern class Arduino {
 
     /**
     **/
-    //TODO static function attachInterrupt();
+    static function attachInterrupt( pin : Int, ISR : Void->Void, mode : Int ) : Void;
 
     /**
         Turns off the given interrupt.
     **/
-    //TODO static function detachInterrupt() : Void;
+    static function detachInterrupt( pin : Int ) : Void;
 
     // --- Interrupts
 

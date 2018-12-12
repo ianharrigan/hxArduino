@@ -1,6 +1,5 @@
 
 import haxe.extern.EitherType;
-import HID;
 
 /**
 	The mouse functions enable 32u4 or SAMD micro based boards to control cursor movement on a connected computer through their micro’s native USB port.
