@@ -9,6 +9,36 @@ package;
 @:native("Serial")
 extern class Serial {
 
+    public static inline var SERIAL_5N1 : Int = untyped "SERIAL_5N1";
+    public static inline var SERIAL_6N1 : Int = untyped "SERIAL_6N1";
+    public static inline var SERIAL_7N1 : Int = untyped "SERIAL_7N1";
+    public static inline var SERIAL_8N1 : Int = untyped "SERIAL_8N1";
+    public static inline var SERIAL_5N2 : Int = untyped "SERIAL_5N2";
+    public static inline var SERIAL_6N2 : Int = untyped "SERIAL_6N2";
+    public static inline var SERIAL_7N2 : Int = untyped "SERIAL_7N2";
+    public static inline var SERIAL_8N2 : Int = untyped "SERIAL_8N2";
+    public static inline var SERIAL_5E1 : Int = untyped "SERIAL_5E1";
+    public static inline var SERIAL_6E1 : Int = untyped "SERIAL_6E1";
+    public static inline var SERIAL_7E1 : Int = untyped "SERIAL_7E1";
+    public static inline var SERIAL_8E1 : Int = untyped "SERIAL_8E1";
+    public static inline var SERIAL_5E2 : Int = untyped "SERIAL_5E2";
+    public static inline var SERIAL_6E2 : Int = untyped "SERIAL_6E2";
+    public static inline var SERIAL_7E2 : Int = untyped "SERIAL_7E2";
+    public static inline var SERIAL_8E2 : Int = untyped "SERIAL_8E2";
+    public static inline var SERIAL_5O1 : Int = untyped "SERIAL_5O1";
+    public static inline var SERIAL_6O1 : Int = untyped "SERIAL_6O1";
+    public static inline var SERIAL_7O1 : Int = untyped "SERIAL_7O1";
+    public static inline var SERIAL_8O1 : Int = untyped "SERIAL_8O1";
+    public static inline var SERIAL_5O2 : Int = untyped "SERIAL_5O2";
+    public static inline var SERIAL_6O2 : Int = untyped "SERIAL_6O2";
+    public static inline var SERIAL_7O2 : Int = untyped "SERIAL_7O2";
+    public static inline var SERIAL_8O2 : Int = untyped "SERIAL_8O2";
+
+    public static inline var BIN : Int = untyped "BIN";
+    public static inline var OCT : Int = untyped "OCT";
+    public static inline var DEC : Int = untyped "DEC";
+    public static inline var HEX : Int = untyped "HEX";
+
     /**
         Get the number of bytes (characters) available for reading from the serial port.
         This is data that’s already arrived and stored in the serial receive buffer (which holds 64 bytes). available() inherits from the Stream utility class.
@@ -23,7 +53,7 @@ extern class Serial {
     /**
         Sets the data rate in bits per second (baud) for serial data transmission.
     **/
-    static function begin( baud : Int, ?config : Dynamic ) : Void;
+    static function begin( baud : Int, ?config : Int ) : Void;
 
     /**
         Disables serial communication, allowing the RX and TX pins to be used for general input and output.
@@ -66,16 +96,16 @@ extern class Serial {
     /**
         Prints data to the serial port as human-readable ASCII text.
     **/
-    @:overload(function( val : String, ?format : Dynamic) : Int {})
-    @:overload(function( val : Float, ?format : Dynamic) : Int {})
-    static function print( val : Int, ?format : Dynamic ) : Int;
+    @:overload(function( val : String, ?format : Int) : Int {})
+    @:overload(function( val : Float, ?format : Int) : Int {})
+    static function print( val : Int, ?format : Int ) : Int;
 
     /**
         Prints data to the serial port as human-readable ASCII text followed by a carriage return character (ASCII 13, or '\r') and a newline character (ASCII 10, or '\n').
     **/
-    @:overload(function( val : String, ?format : Dynamic) : Int {})
-    @:overload(function( val : Float, ?format : Dynamic) : Int {})
-    static function println( val : Int, ?format : Dynamic ) : Int;
+    @:overload(function( val : String, ?format : Int) : Int {})
+    @:overload(function( val : Float, ?format : Int) : Int {})
+    static function println( val : Int, ?format : Int ) : Int;
 
     /**
         Reads incoming serial data.
