@@ -4,8 +4,8 @@
 	"tags": ["arduino"],
 	"description": "custom haxe generator to create arduino specific c++",
 	"contributors": ["ianharrigan"],
-	"releasenote": "",
-	"version": "1.0.0",
+	"releasenote": "many more externs and docs thanks to @disktree",
+	"version": "1.1.0",
 	"classPath": "src",
 	"url": "https://github.com/ianharrigan/hxArduino",
 	"dependencies": {
