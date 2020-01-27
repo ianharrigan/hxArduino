@@ -44,7 +44,7 @@ class Generator {
     
     private static function buildClass(c:Ref<ClassType>, params:Array<Type>):OClass {
         if (c.toString() == "Array" || c.toString() == "Std" || c.toString() == "ArrayAccess" || c.toString() == "String" || c.toString() == "Type"
-            || StringTools.startsWith(c.toString(), "haxe.") || c.toString() == "IntIterator") {
+            || StringTools.startsWith(c.toString(), "haxe.") || c.toString() == "IntIterator" || c.toString() == "_EnumValue.EnumValue_Impl_") {
             trace("Skipping: " + c.toString());
             return null;
         } else {
@@ -147,7 +147,12 @@ class Generator {
                         var omethodarg = new OMethodArg();
                         omethodarg.name = arg.v.name;
                         omethodarg.type = buildType(arg.v.t);
-                        omethodarg.value = buildConstant(arg.value);
+                        switch (arg.value.expr) {
+                            case TConst(c):
+                                omethodarg.value = buildConstant(c);
+                            default:
+                                trace("method arg type not impl: " + arg.value.expr);
+                        }
                         omethodarg.id = arg.v.id;
                         omethod.args.push(omethodarg);
                     }
