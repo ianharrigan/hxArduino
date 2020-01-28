@@ -147,11 +147,13 @@ class Generator {
                         var omethodarg = new OMethodArg();
                         omethodarg.name = arg.v.name;
                         omethodarg.type = buildType(arg.v.t);
-                        switch (arg.value.expr) {
-                            case TConst(c):
-                                omethodarg.value = buildConstant(c);
-                            default:
-                                trace("method arg type not impl: " + arg.value.expr);
+                        if (arg.value != null) {
+                            switch (arg.value.expr) {
+                                case TConst(c):
+                                    omethodarg.value = buildConstant(c);
+                                default:
+                                    trace("method arg type not impl: " + arg.value.expr);
+                            }
                         }
                         omethodarg.id = arg.v.id;
                         omethod.args.push(omethodarg);
