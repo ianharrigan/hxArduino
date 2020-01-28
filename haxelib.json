@@ -1,14 +1,14 @@
 {
-    "version": "1.2.0",
     "contributors": [
         "ianharrigan"
     ],
-    "dependencies": {},
-    "releasenote": "haxe 4",
+    "version": "1.2.1",
+    "license": "MIT",
     "tags": [
         "arduino"
     ],
-    "license": "MIT",
+    "releasenote": "param value can be null",
+    "dependencies": {},
     "name": "hxArduino",
     "description": "custom haxe generator to create arduino specific c++",
     "classPath": "src",
