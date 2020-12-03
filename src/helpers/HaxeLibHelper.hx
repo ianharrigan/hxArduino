@@ -23,6 +23,8 @@ class HaxeLibHelper {
                     path = v.substr(1, v.length - 2);
                     if (StringTools.startsWith(path, "dev:")) {
                         path = path.substr(4, path.length);
+                    } else {
+                        path = getLibPathAlt(lib);
                     }
                     
                     break;
@@ -30,8 +32,26 @@ class HaxeLibHelper {
             }
         }
         
-        
         return path;
+    }
+    
+    private static function getLibPathAlt(lib:String):String {
+        var path = null;
+
+        var p = new Process("haxelib path " + lib);
+        var output = p.stdout.readAll().toString();
+        p.close();
+        
+        for (line in output.split("\n")) {
+            line = StringTools.trim(line);
+            if (line.length == 0 || StringTools.startsWith(line, "-") || StringTools.startsWith(line, "#")) {
+                continue;
+            }
+            
+            path = line;
+        }
+        
+        return path + "..";
     }
     
     public static function hasLib(lib:String):Bool {
