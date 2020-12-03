@@ -44,7 +44,8 @@ class Generator {
     
     private static function buildClass(c:Ref<ClassType>, params:Array<Type>):OClass {
         if (c.toString() == "Array" || c.toString() == "Std" || c.toString() == "ArrayAccess" || c.toString() == "String" || c.toString() == "Type"
-            || StringTools.startsWith(c.toString(), "haxe.") || c.toString() == "IntIterator" || c.toString() == "_EnumValue.EnumValue_Impl_") {
+            || StringTools.startsWith(c.toString(), "haxe.") || c.toString() == "IntIterator" || c.toString() == "_EnumValue.EnumValue_Impl_"            
+            || c.toString() == "_Any.Any_Impl_" || c.toString() == "StringBuf") {
             trace("Skipping: " + c.toString());
             return null;
         } else {

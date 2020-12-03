@@ -275,6 +275,9 @@ class ArduinoCPPBuilder {
         for (i in 0... m.args.length) {
             var arg = m.args[i];
             var oclass = findClass(arg.type.name);
+            if (oclass == null) {
+                continue;
+            }
             var varTypeName = arg.type.safeName;
             if (oclass != null && oclass.externName != null) {
                 varTypeName = oclass.externName;
