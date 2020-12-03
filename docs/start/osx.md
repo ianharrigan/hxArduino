@@ -24,7 +24,7 @@ ARDUINO_PORT=/dev/cu.usbmodem14101
 ```
 (default: `COM3` which will never work!)
 
-Forgot how to? Check [How to set environment variable](start/osx.md?id=how-to-set-environment-variable)
+Forgot how to? Check [How to set environment variable](osx.md?id=how-to-set-environment-variable)
 
 
 ## Find Arduino Port
