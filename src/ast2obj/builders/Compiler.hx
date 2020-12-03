@@ -6,14 +6,14 @@ import helpers.SizeHelper;
 import sys.FileSystem;
 
 class Compiler {
-    private static var ARDUINO_HOME:String = "C:\\PROGRA~2\\Arduino";
+    private static var ARDUINO_HOME:String = "C:\\Program Files (x86)\\Arduino";
     private static var ARDUINO_HOME_OSX:String = "/Applications/Arduino.app/Contents/Java";
     
-    private static var GCC:String = '%ARDUINO_HOME%\\hardware\\tools\\avr/bin/avr-gcc';
-    private static var GCCPP:String = '%ARDUINO_HOME%\\hardware\\tools\\avr/bin/avr-g++';
-    private static var GCC_AR:String = '%ARDUINO_HOME%\\hardware\\tools\\avr/bin/avr-gcc-ar';
-    private static var OBJCOPY:String = '%ARDUINO_HOME%\\hardware\\tools\\avr/bin/avr-objcopy';
-    private static var SIZE:String = '%ARDUINO_HOME%\\hardware\\tools\\avr/bin/avr-size';
+    private static var GCC:String = '"%ARDUINO_HOME%\\hardware\\tools\\avr/bin/avr-gcc"';
+    private static var GCCPP:String = '"%ARDUINO_HOME%\\hardware\\tools\\avr/bin/avr-g++"';
+    private static var GCC_AR:String = '"%ARDUINO_HOME%\\hardware\\tools\\avr/bin/avr-gcc-ar"';
+    private static var OBJCOPY:String = '"%ARDUINO_HOME%\\hardware\\tools\\avr/bin/avr-objcopy"';
+    private static var SIZE:String = '"%ARDUINO_HOME%\\hardware\\tools\\avr/bin/avr-size"';
     
     private static var STD_INCLUDES:Array<String> = [
         "%ARDUINO_HOME%\\hardware\\arduino\\avr\\cores\\arduino",
@@ -117,12 +117,12 @@ class Compiler {
             var params:Array<String> = CPP_FLAGS.split(" ");
             
             for (include in STD_INCLUDES) {
-                params.push(Path.normalize('-I${include}'));
+                params.push(Path.normalize('-I"${include}"'));
             }
             
-            params.push(Path.normalize('${cppFile}'));
+            params.push(Path.normalize('"${cppFile}"'));
             params.push('-o');
-            params.push(Path.normalize('${outPath}/${fileName(cppFile)}.o'));
+            params.push(Path.normalize('"${outPath}/${fileName(cppFile)}.o"'));
             var n = new ProcessHelper().run(Path.normalize(GCCPP), params);
             if (n != 0) {
                 compilationFailed = true;
@@ -143,12 +143,12 @@ class Compiler {
             var params:Array<String> = ASM_FLAGS.split(" ");
             
             for (include in STD_INCLUDES) {
-                params.push(Path.normalize('-I${include}'));
+                params.push(Path.normalize('-I"${include}"'));
             }
             
-            params.push(Path.normalize('${asmFile}'));
+            params.push(Path.normalize('"${asmFile}"'));
             params.push('-o');
-            params.push(Path.normalize('${outPath}/core/${fileName(asmFile)}.o'));
+            params.push(Path.normalize('"${outPath}/core/${fileName(asmFile)}.o"'));
             
             var n = new ProcessHelper().run(Path.normalize(GCC), params);
             if (n != 0) {
@@ -170,12 +170,12 @@ class Compiler {
             var params:Array<String> = C_FLAGS.split(" ");
             
             for (include in STD_INCLUDES) {
-                params.push(Path.normalize('-I${include}'));
+                params.push(Path.normalize('-I"${include}"'));
             }
             
-            params.push(Path.normalize('${cFile}'));
+            params.push(Path.normalize('"${cFile}"'));
             params.push('-o');
-            params.push(Path.normalize('${outPath}/core/${fileName(cFile)}.o'));
+            params.push(Path.normalize('"${outPath}/core/${fileName(cFile)}.o"'));
             
             var n = new ProcessHelper().run(Path.normalize(GCC), params);
             if (n != 0) {
@@ -197,12 +197,12 @@ class Compiler {
             var params:Array<String> = CPP_FLAGS.split(" ");
             
             for (include in STD_INCLUDES) {
-                params.push(Path.normalize('-I${include}'));
+                params.push(Path.normalize('-I"${include}"'));
             }
             
-            params.push(Path.normalize('${cppFile}'));
+            params.push(Path.normalize('"${cppFile}"'));
             params.push('-o');
-            params.push(Path.normalize('${outPath}/core/${fileName(cppFile)}.o'));
+            params.push(Path.normalize('"${outPath}/core/${fileName(cppFile)}.o"'));
             
             var n = new ProcessHelper().run(Path.normalize(GCCPP), params);
             if (n != 0) {
