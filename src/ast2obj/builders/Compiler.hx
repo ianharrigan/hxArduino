@@ -86,19 +86,38 @@ class Compiler {
         /////////////////////////////////////////////////////////////////////////////
         // LIBRARIES
         /////////////////////////////////////////////////////////////////////////////
+        var additionalLibIncludes = [];
         for (l in libraries) {
             if (FileSystem.exists(Path.normalize('${ARDUINO_HOME}/libraries/${l}/src'))) {
                 FileHelper.copyFiles('${ARDUINO_HOME}/libraries/${l}/src', srcPath, "cpp");
                 FileHelper.copyFiles('${ARDUINO_HOME}/libraries/${l}/src', includePath, "h");
                 FileHelper.copyFiles('${ARDUINO_HOME}/libraries/${l}/src', includePath, "c");
+                
+                var libraryDirs:Array<String> = [];
+                FileHelper.findDirs('${ARDUINO_HOME}/libraries/${l}/src', libraryDirs);
+                for (item in libraryDirs) {
+                    additionalLibIncludes.push(item);
+                }
             } else if (FileSystem.exists(Path.normalize('${ARDUINO_HOME}/libraries/${l}'))) {
                 FileHelper.copyFiles('${ARDUINO_HOME}/libraries/${l}', srcPath, "cpp");
                 FileHelper.copyFiles('${ARDUINO_HOME}/libraries/${l}', includePath, "h");
                 FileHelper.copyFiles('${ARDUINO_HOME}/libraries/${l}', includePath, "c");
+                
+                var libraryDirs:Array<String> = [];
+                FileHelper.findDirs('${ARDUINO_HOME}/libraries/${l}', libraryDirs);
+                for (item in libraryDirs) {
+                    additionalLibIncludes.push(item);
+                }
             } else if (FileSystem.exists(Path.normalize('${ARDUINO_HOME}/hardware/arduino/avr/libraries/${l}/src'))) {
                 FileHelper.copyFiles('${ARDUINO_HOME}/hardware/arduino/avr/libraries/${l}/src', srcPath, "cpp");
                 FileHelper.copyFiles('${ARDUINO_HOME}/hardware/arduino/avr/libraries/${l}/src', includePath, "h");
                 FileHelper.copyFiles('${ARDUINO_HOME}/hardware/arduino/avr/libraries/${l}/src', includePath, "c");
+                
+                var libraryDirs:Array<String> = [];
+                FileHelper.findDirs('${ARDUINO_HOME}/hardware/arduino/avr/libraries/${l}/src', libraryDirs);
+                for (item in libraryDirs) {
+                    additionalLibIncludes.push(item);
+                }
             }
         }
         
@@ -117,6 +136,9 @@ class Compiler {
             var params:Array<String> = CPP_FLAGS.split(" ");
             
             for (include in STD_INCLUDES) {
+                params.push(Path.normalize('-I${include}'));
+            }
+            for (include in additionalLibIncludes) {
                 params.push(Path.normalize('-I${include}'));
             }
             
@@ -143,6 +165,9 @@ class Compiler {
             var params:Array<String> = ASM_FLAGS.split(" ");
             
             for (include in STD_INCLUDES) {
+                params.push(Path.normalize('-I${include}'));
+            }
+            for (include in additionalLibIncludes) {
                 params.push(Path.normalize('-I${include}'));
             }
             
@@ -172,6 +197,9 @@ class Compiler {
             for (include in STD_INCLUDES) {
                 params.push(Path.normalize('-I${include}'));
             }
+            for (include in additionalLibIncludes) {
+                params.push(Path.normalize('-I${include}'));
+            }
             
             params.push(Path.normalize('${cFile}'));
             params.push('-o');
@@ -197,6 +225,9 @@ class Compiler {
             var params:Array<String> = CPP_FLAGS.split(" ");
             
             for (include in STD_INCLUDES) {
+                params.push(Path.normalize('-I${include}'));
+            }
+            for (include in additionalLibIncludes) {
                 params.push(Path.normalize('-I${include}'));
             }
             

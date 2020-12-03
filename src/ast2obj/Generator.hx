@@ -212,6 +212,8 @@ class Generator {
                 oexpr = new OVar();
                 cast(oexpr, OVar).name = v.name;
                 cast(oexpr, OVar).type = buildType(v.t);
+                trace("==================================================== > " + v.t);
+                //trace("==================================================== > " + v.t);
                 oexpr.nextExpression = buildExpression(e, oexpr);
             case TBinop(op, e1, e2):    
                 oexpr = new OBinOp();
@@ -267,6 +269,7 @@ class Generator {
                 oexpr.nextExpression = buildExpression(e, oexpr);
             case TArray(e1, e2):    
                 oexpr = new OArray();
+                trace("¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿ " + e1);
                 cast(oexpr, OArray).varExpression = buildExpression(e1, oexpr);
                 oexpr.nextExpression = buildExpression(e2, oexpr);
             case TUnop(op, postFix, e):
@@ -372,7 +375,11 @@ class Generator {
         
         switch (t) {
             case TAbstract(t, params):
+                trace(t.toString());
                 otype.name = t.toString();
+                for (p in params) {
+                    otype.typeParameters.push(buildType(p));
+                }
             case TInst(t, params):    
                 otype.name = t.toString();
                 for (p in params) {

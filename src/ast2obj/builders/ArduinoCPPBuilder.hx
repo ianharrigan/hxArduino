@@ -275,6 +275,9 @@ class ArduinoCPPBuilder {
         for (i in 0... m.args.length) {
             var arg = m.args[i];
             var oclass = findClass(arg.type.name);
+            if (oclass == null) {
+                continue;
+            }
             var varTypeName = arg.type.safeName;
             if (oclass != null && oclass.externName != null) {
                 varTypeName = oclass.externName;
@@ -355,8 +358,14 @@ class ArduinoCPPBuilder {
             sb.add(buildExpression(e.nextExpression, tabs));
         } else if (Std.is(e, OVar)) {
             var ovar = cast(e, OVar);
+            trace(">>>> " + substTypeName(ovar.type.safeName));
             if (isInternalType(substTypeName(ovar.type.safeName))) {
                 sb.add(substTypeName(ovar.type.safeName));
+            } else if (substTypeName(ovar.type.safeName) == "NativeArray") {
+                trace("------------------------------> here");
+                if (ovar.type.typeParameters != null && ovar.type.typeParameters.length == 1) {
+                    sb.add(substTypeName(ovar.type.typeParameters[0].safeName));
+                }
             } else {
                 var oclass = findClass(ovar.type.name);
                 var varTypeName = ovar.type.safeName;
@@ -372,7 +381,7 @@ class ArduinoCPPBuilder {
                     addRef("AutoPtr");
                 }
             }
-            if (ovar.type.typeParameters != null && ovar.type.typeParameters.length > 0) {
+            if (ovar.type.typeParameters != null && ovar.type.typeParameters.length > 0 && substTypeName(ovar.type.safeName) != "NativeArray") {
                 sb.add("<");
                 for (i in 0...ovar.type.typeParameters.length) {
                     sb.add(substTypeName(ovar.type.typeParameters[i].safeName));
@@ -384,7 +393,15 @@ class ArduinoCPPBuilder {
             }
             sb.add(" ");
             sb.add(ovar.name);
-            if (ovar.nextExpression != null && Std.is(e.nextExpression, OArrayDecl) == false) { // we dont want arraydecl "inline"
+            if (substTypeName(ovar.type.safeName) == "NativeArray" && ovar.nextExpression != null) {
+                sb.add("[]");
+                sb.add(" = ");
+                sb.add(buildExpression(ovar.nextExpression, tabs));
+                sb.add(";");
+                trace("------------------------------------> " + buildExpression(ovar.nextExpression, tabs));
+                //sb.add(buildExpression(ovar.nextExpression, tabs));
+                //sb.add(";\n");
+            } else if (ovar.nextExpression != null && Std.is(e.nextExpression, OArrayDecl) == false) { // we dont want arraydecl "inline"
                 sb.add(" = ");
                 sb.add(buildExpression(ovar.nextExpression, tabs));
             } else if (ovar.nextExpression != null) {
@@ -423,12 +440,25 @@ class ArduinoCPPBuilder {
         } else if (Std.is(e, OArrayDecl)) {
             var ovar = cast(e.prevExpression, OVar);
             var oarraydecl = cast(e, OArrayDecl);
-            for (e in oarraydecl.expressions) {
-                sb.add(tabs);
-                sb.add(ovar.name);
-                sb.add(".add(");
-                sb.add(buildExpression(e, tabs));
-                sb.add(");\n");
+            if (substTypeName(ovar.type.safeName) == "NativeArray") {
+                sb.add("{");
+                var n = 0;
+                for (e in oarraydecl.expressions) {
+                    sb.add(buildExpression(e, ""));
+                    if (n < oarraydecl.expressions.length - 1) {
+                        sb.add(", ");
+                    }
+                    n++;
+                }
+                sb.add("}");
+            } else {
+                for (e in oarraydecl.expressions) {
+                    sb.add(tabs);
+                    sb.add(ovar.name);
+                    sb.add(".add(");
+                    sb.add(buildExpression(e, tabs));
+                    sb.add(");\n");
+                }
             }
         } else if (Std.is(e, OWhile)) {
             var owhile = cast(e, OWhile);
@@ -449,6 +479,8 @@ class ArduinoCPPBuilder {
             }
         } else if (Std.is(e, OArray)) {
             var oarray = cast(e, OArray);
+            trace("??????????????????????????????????????????? " + cast(oarray.varExpression, OLocal).name);
+            trace("??????????????????????????????????????????? " + cast(oarray.varExpression, OLocal).type.safeName);
             sb.add(buildExpression(oarray.varExpression, tabs));
             sb.add(".get(");
             sb.add(buildExpression(oarray.nextExpression, tabs));
@@ -684,6 +716,8 @@ class ArduinoCPPBuilder {
             } else {
                 addRef(typeName);
             }
+        } else if (typeName == "LinkedList") {
+            addRef("LinkedList");
         }
         
         return typeName;

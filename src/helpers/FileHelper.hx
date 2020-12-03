@@ -26,6 +26,21 @@ class FileHelper {
         }
     }
     
+    public static function findDirs(folder:String, result:Array<String>) {
+        if (FileSystem.exists(folder) == false || FileSystem.isDirectory(folder) == false) {
+            return;
+        }
+        
+        var contents = FileSystem.readDirectory(folder);
+        for (file in contents) {
+            var fullPath = Path.normalize(folder + "/" + file);
+            if (FileSystem.isDirectory(fullPath) == true) {
+                result.push(fullPath);
+                findDirs(fullPath, result);
+            }
+        }
+    }
+    
     public static function copyFiles(src:String, dst:String, extension:String) {
         src = Path.normalize(src);
         var files:Array<String> = [];
@@ -35,6 +50,7 @@ class FileHelper {
             var dstPath = Path.normalize(dst + "/" + relPath);
             var p = new Path(dstPath);
             FileSystem.createDirectory(p.dir);
+            trace("copying: " + src + relPath + " => " + dstPath);
             File.copy(f, dstPath);
         }
     }
