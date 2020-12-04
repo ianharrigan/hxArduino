@@ -1,6 +1,6 @@
 # hxArduino on Linux
 
-Make sure you followed the [Getting Started](start/getting_started.md) instructions first.
+Make sure you followed the [Getting Started](getting_started.md) instructions first.
 
 **This needs more love**
 
