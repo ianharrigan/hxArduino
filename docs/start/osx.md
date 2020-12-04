@@ -1,6 +1,6 @@
 # hxArduino on OSX
 
-Make sure you followed the [Getting Started](start/getting_started.md) instructions first.
+Make sure you followed the [Getting Started](getting_started.md) instructions first.
 
 ## Environment variable
 
@@ -24,7 +24,7 @@ ARDUINO_PORT=/dev/cu.usbmodem14101
 ```
 (default: `COM3` which will never work!)
 
-Forgot how to? Check [How to set environment variable](start/osx.md?id=how-to-set-environment-variable)
+Forgot how to? Check [How to set environment variable](osx.md?id=how-to-set-environment-variable)
 
 
 ## Find Arduino Port
