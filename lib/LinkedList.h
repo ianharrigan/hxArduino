@@ -42,6 +42,13 @@ protected:
 	ListNode<T>* findEndOfSortedString(ListNode<T> *p, int (*cmp)(T &, T &));
 
 public:
+	// Copy constructor 
+	LinkedList(const ListNode<T> &copy) {
+		_size = copy._size;
+		root = copy.root;
+		last = copy.last;
+	}
+
 	LinkedList();
 	~LinkedList();
 
@@ -100,6 +107,18 @@ public:
 		Sort the list, given a comparison function
 	*/
 	virtual void sort(int (*cmp)(T &, T &));
+
+	// added concat function (likely ineffecient - esp for large arrays - which probably wouldnt make sense on arduino anyway)
+	LinkedList<T> concat(LinkedList &a) {
+		LinkedList<T> out;
+		for (int i = 0; i < size(); i++) {
+			out.add(get(i));
+		}
+		for (int i = 0; i < a.size(); i++) {
+			out.add(a.get(i));
+		}
+		return out;
+	}
 
 };
 
