@@ -674,7 +674,7 @@ class ArduinoCPPBuilder {
             case _:
         }
         
-        //addRef(typeName);
+        addRef(typeName);
         if (isInternalType(typeName) == false) {
             var oclass = findClass(typeName);
             if (oclass != null) {
