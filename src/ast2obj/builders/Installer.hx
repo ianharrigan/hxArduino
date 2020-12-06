@@ -11,7 +11,7 @@ class Installer {
     private static var DUDE:String = '%ARDUINO_HOME%/hardware/tools/avr/bin/avrdude';
     private static var SIZE:String = '%ARDUINO_HOME%/hardware/tools/avr/bin/avr-size';
 
-    public static function install(hexFile:String, ?port: String = null, ?speed: Null<Int> = null) {
+    public static function install(hexFile:String, ?port: String = null, ?speed: Null<Int> = null, ?board_code: String = null) {
         haxe.Log.trace = function(v:Dynamic, ?infos:haxe.PosInfos) {
           Sys.println(v);
         }
@@ -21,11 +21,15 @@ class Installer {
         } else if (Sys.systemName() == "Mac") {
             ARDUINO_HOME = ARDUINO_HOME_OSX;
         }
-        var board_code = Sys.getEnv("TARGET_BOARD");
+        
         if (board_code == null) {
-            trace("Error, set env TARGET_BOARD.");
-            return;
+            board_code = Sys.getEnv("TARGET_BOARD");
+            if (board_code == null) {
+                trace("Error, provide 'TARGET_BOARD' env or '-boardcode' argument.");
+                return;
+            }
         }
+        
         var board = MCUProvider.byCode(board_code);
 
         if (board == null) {

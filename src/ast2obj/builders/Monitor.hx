@@ -30,7 +30,7 @@ class Monitor {
         #end
 
     }
-    public static function monitor(port:String = null, speed: Null<Int>) {
+    public static function monitor(port:String = null, speed: Null<Int>, ?board_code: String = null) {
         haxe.Log.trace = function(v:Dynamic, ?infos:haxe.PosInfos) {
           Sys.println(v);
         }
@@ -46,7 +46,13 @@ class Monitor {
         }
 
         if (speed == null) {
-            var board_code = Sys.getEnv("TARGET_BOARD");
+            if (board_code == null) {
+                board_code = Sys.getEnv("TARGET_BOARD");
+                if (board_code == null) {
+                    trace("Error, provide 'TARGET_BOARD' env or '-boardcode' argument.");
+                    return;
+                }
+            }
             var board = MCUProvider.byCode(board_code);
             if (board == null) {
                 trace("cannot detect baudrate for connecting to serialport.");
