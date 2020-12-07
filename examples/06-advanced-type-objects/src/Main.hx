@@ -5,6 +5,8 @@ import foo.Varianse.ChildNo2;
 import foo.Varianse.Base;
 import foo.*;
 
+using foo.Extender.IntExtender;
+
 class Main {
     public function setup() {
 
@@ -15,7 +17,7 @@ class Main {
                 a1.FooFunction1(1) + 
                 a1.FooFunction2(2) + 
                 a1.FooFunction3(3) +
-                a1[5]);
+                a1[5.triple()]);
         }
         /* end using abstract type */
 
