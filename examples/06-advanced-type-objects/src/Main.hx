@@ -47,7 +47,7 @@ class Main {
             Serial.println(Literals.n1);
             Serial.println(Literals.n2); 
             Serial.println(Literals.n3);
-            Serial.println(Std.string(Literals.n4));
+            //Serial.println(Std.string(Literals.n4));
             Serial.println(Std.string(Literals.n5));
             Serial.println(Std.string(Literals.n6));
         }
