@@ -3,7 +3,8 @@ package foo;
 
 abstract FooAbstract(Int) from Int to Int {
 
-    public function new() {}
+    public function new() 
+        this = 0;
 
     public static function FooStaticFunction(): FooAbstract
         return 1 + 1;
