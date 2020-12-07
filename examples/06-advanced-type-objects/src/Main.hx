@@ -44,15 +44,12 @@ class Main {
 
         /* Literals test */
         {
-            var mixedArray: Array<Dynamic> = [
-                 Literals.n1,
-                 Literals.n2, 
-                 Literals.n3,
-                 Literals.n4, 
-                 Literals.n5, 
-                 Literals.n6
-            ];
-            Serial.println(mixedArray.length);
+            Serial.println(Literals.n1);
+            Serial.println(Literals.n2); 
+            Serial.println(Literals.n3);
+            Serial.println(Std.string(Literals.n4));
+            Serial.println(Std.string(Literals.n5));
+            Serial.println(Std.string(Literals.n6));
         }
         /* end Literals test */
 
