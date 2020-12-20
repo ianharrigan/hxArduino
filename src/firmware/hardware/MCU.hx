@@ -4,9 +4,6 @@ import firmware.hardware.*;
 import firmware.hardware.memory.*;
 
 interface MCU {
-    public var FlashMemory(get, never): Null<IMemory>;
-    public var EEPROMemory(get, never): Null<IMemory>;
-
     public var UploadingSpeed(get, never): Int;
 
     public var Protocol(get, never): String;
