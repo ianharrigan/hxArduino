@@ -1,4 +1,5 @@
 package ast2obj.builders;
+import firmware.hardware.MCU.MCUProvider;
 import haxe.io.Path;
 import helpers.ProcessHelper;
 import helpers.SizeHelper;
@@ -10,7 +11,7 @@ class Installer {
     private static var DUDE:String = '%ARDUINO_HOME%/hardware/tools/avr/bin/avrdude';
     private static var SIZE:String = '%ARDUINO_HOME%/hardware/tools/avr/bin/avr-size';
 
-    public static function install(hexFile:String, port:String = null) {
+    public static function install(hexFile:String, ?port: String = null, ?speed: Null<Int> = null, ?board_code: String = null) {
         haxe.Log.trace = function(v:Dynamic, ?infos:haxe.PosInfos) {
           Sys.println(v);
         }
@@ -19,6 +20,25 @@ class Installer {
             ARDUINO_HOME = Sys.getEnv("ARDUINO_HOME");
         } else if (Sys.systemName() == "Mac") {
             ARDUINO_HOME = ARDUINO_HOME_OSX;
+        }
+        
+        if (board_code == null) {
+            board_code = Sys.getEnv("TARGET_BOARD");
+            if (board_code == null) {
+                trace("Error, provide 'TARGET_BOARD' env or '-boardcode' argument.");
+                return;
+            }
+        }
+        
+        var board = MCUProvider.byCode(board_code);
+
+        if (board == null) {
+            trace('Error, board "$board_code" is not support.');
+            return;
+        }
+
+        if (speed == null) {
+            speed = board.UploadingSpeed;
         }
 
         if (hexFile == null) {
@@ -32,11 +52,12 @@ class Installer {
             port = Sys.getEnv("ARDUINO_PORT");
         }
         if (port == null) {
-            port = "COM3"; // only works with windows
+            trace("Error, provide 'ARDUINO_PORT' env or '-port' argument.");
+            return;
         }
 
         trace("Installing: " + hexFile + " via " + port);
-        var params:Array<String> = '-C${ARDUINO_HOME}/hardware/tools/avr/etc/avrdude.conf -v -patmega328p -carduino -P${port} -b115200 -D'.split(" ");
+        var params:Array<String> = '-C ${ARDUINO_HOME}/hardware/tools/avr/etc/avrdude.conf -v -p ${board.Name} -c${board.Protocol} -P${port} -b${speed} -D'.split(" ");
         params.push('-Uflash:w:${hexFile}:i');
         var n = new ProcessHelper().run(DUDE, params);
         if (n != 0) {

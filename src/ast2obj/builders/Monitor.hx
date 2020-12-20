@@ -1,5 +1,7 @@
 package ast2obj.builders;
 
+import firmware.hardware.MCU.MCUProvider;
+
 class Monitor {
     public static function portlist() {
         haxe.Log.trace = function(v:Dynamic, ?infos:haxe.PosInfos) {
@@ -28,7 +30,7 @@ class Monitor {
         #end
 
     }
-    public static function monitor(port:String = null) {
+    public static function monitor(port:String = null, speed: Null<Int>, ?board_code: String = null) {
         haxe.Log.trace = function(v:Dynamic, ?infos:haxe.PosInfos) {
           Sys.println(v);
         }
@@ -39,13 +41,31 @@ class Monitor {
             port = Sys.getEnv("ARDUINO_PORT");
         }
         if (port == null) {
-            port = "COM3";
+            trace("Error, provide 'ARDUINO_PORT' env or '-port' argument.");
+            return;
         }
 
-        trace("Starting serial monitor on " + port);
+        if (speed == null) {
+            if (board_code == null) {
+                board_code = Sys.getEnv("TARGET_BOARD");
+                if (board_code == null) {
+                    trace("Error, provide 'TARGET_BOARD' env or '-boardcode' argument.");
+                    return;
+                }
+            }
+            var board = MCUProvider.byCode(board_code);
+            if (board == null) {
+                trace("cannot detect baudrate for connecting to serialport.");
+                trace("Provide '-speed' argument or set 'TARGET_BOARD' env.");
+                return;
+            }
+            speed = board.UploadingSpeed;
+        }
+
+        trace('Starting serial monitor on "$port" and "$speed" baudrate.');
         trace("Port list: " + hxSerial.Serial.getDeviceList());
 
-        var serialObj = new hxSerial.Serial(port, 115200);
+        var serialObj = new hxSerial.Serial(port, speed);
         serialObj.setup();
 
         while (true) {

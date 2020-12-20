@@ -48,6 +48,8 @@ class Run {
                 trace('     -v, --version       Show program\'s version number and exit.');
                 trace('     -file               Install hexfile (no idea?).');
                 trace('     -port               Port to use.');
+                trace('     -speed              baudrate (default detecting by board code).');
+                trace('     -boardcode          board code (atmega1284, etc).');
             default :
                 trace("Unknown command '" + command + "'");
                 trace("case '"+command+"': trace ('"+command+"');");
@@ -60,10 +62,14 @@ class Run {
         if (command == "install") {
             var hexFile:String = extractArg(args, "-file");
             var port:String = extractArg(args, "-port");
-            Installer.install(hexFile, port);
+            var speed:String = extractArg(args, "-speed");
+            var boardcode:String = extractArg(args, "-boardcode");
+            Installer.install(hexFile, port, Std.parseInt(speed), boardcode);
         } else if (command == "monitor") {
             var port:String = extractArg(args, "-port");
-            Monitor.monitor(port);
+            var speed:String = extractArg(args, "-speed");
+            var boardcode:String = extractArg(args, "-boardcode");
+            Monitor.monitor(port, Std.parseInt(speed), boardcode);
         } else if (command == "portlist") {
             Monitor.portlist();
         }
