@@ -2,7 +2,7 @@ package firmware.hardware;
 
 import firmware.hardware.memory.*;
 
-class ATmega1280 implements MCU {
+class AtMega1280 implements MCU {
     public function new() { }
 
     public var FlashMemory(get, never): Null<IMemory>;

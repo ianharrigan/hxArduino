@@ -1,7 +1,6 @@
 package firmware.hardware;
 
-import haxe.Exception;
-import firmware.hardware.Atmega1280;
+import firmware.hardware.*;
 import firmware.hardware.memory.*;
 
 interface MCU {
@@ -24,7 +23,7 @@ class MCUProvider {
             case "atmega32u4":
                 return new AtMega32u4();
             case "atmega1280":
-                return new ATmega1280();
+                return new AtMega1280();
             case _:
                return null;
         }
