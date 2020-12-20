@@ -1,7 +1,7 @@
 package firmware.hardware;
 
 import haxe.Exception;
-import firmware.hardware.AtMega1284.AtMega328P;
+import firmware.hardware.Atmega1280;
 import firmware.hardware.memory.*;
 
 interface MCU {
