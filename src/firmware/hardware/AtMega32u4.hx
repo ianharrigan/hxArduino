@@ -11,6 +11,14 @@ class AtMega32u4 implements MCU {
 
     public var UploadingSpeed(get, never): Int;
 
+    public var Protocol(get, never): String;
+    public var Name(get, never): String;
+
+    public function get_Name(): String
+        return "atmega32u4";
+    
+    public function get_Protocol(): String
+        return "arduino";
 
     public function get_UploadingSpeed(): Int 
         return 57600;
