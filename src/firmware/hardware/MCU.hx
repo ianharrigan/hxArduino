@@ -29,6 +29,8 @@ class MCUProvider {
                 return new AtMega1280();
             case "megaatmega2560":
                 return new MegaAtMega2560();
+            case "nanoatmega328p":
+                return new NanoAtMega328p();
             case _:
                return null;
         }
