@@ -11,7 +11,7 @@ class AtMega328P implements MCU {
     public var UploadingSpeed(get, never): Int;
 
     public function get_UploadingSpeed(): Int 
-        return 115200;
+        return 9600;
     
     public function get_FlashMemory(): Null<IMemory>
         return new FlashMemory(30720, 128);
