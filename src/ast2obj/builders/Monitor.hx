@@ -70,9 +70,8 @@ class Monitor {
 
         while (true) {
             var i = serialObj.available();
-            if(i != 0) {
-                Sys.print(serialObj.readBytes(i));
-            }
+            var s = serialObj.readBytes(i);
+            neko.Lib.print(s);
             Sys.sleep(0.01);
         }
 
